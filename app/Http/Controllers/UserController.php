@@ -7,7 +7,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use JWTAuth;
+use Auth;
 use Tymon\JWTAuth\Exceptions\JWTException;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -16,37 +19,44 @@ class UserController extends Controller
         $credentials = $request->only('email', 'password');
 
         try {
-            if (! $token = JWTAuth::attempt($credentials)) {
-                return response()->json(['error' => 'invalid_credentials'], 400);
+            if (! $token = Auth::guard()->attempt($credentials)) {
+                return response()->json(['error' => 'invalid credentials'], 400);
             }
         } catch (JWTException $e) {
             return response()->json(['error' => 'could_not_create_token'], 500);
         }
 
-        return response()->json(compact('token'));
+        return response()->json(['data'=> $token], 200);
     }
 
     public function register(Request $request)
     {
             $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
+            'username' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
         ]);
 
         if($validator->fails()){
-                return response()->json($validator->errors()->toJson(), 400);
+                return response()->json($validator->errors()->first(), 400);
         }
 
         $user = User::create([
             'name' => $request->get('name'),
             'email' => $request->get('email'),
             'password' => Hash::make($request->get('password')),
+            'username'=>$request->get('username')
         ]);
+        $user->assignRole('show posts');
 
-        $token = JWTAuth::fromUser($user);
+        return response()->json(["message"=>"User Created Successfully"],201);
+    }
 
-        return response()->json(compact('user','token'),201);
+    public function me()
+    {
+            $user = Auth::user();
+            return response()->json(['data'=> $user], 200);
     }
 
     public function getAuthenticatedUser()
