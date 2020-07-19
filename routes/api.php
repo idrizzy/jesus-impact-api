@@ -39,9 +39,9 @@ Route::post('deletepermission', 'RolePermissionController@deletePermission');
 //  Route::group(['middleware' => 'auth:api'], function () {
 //  Route::post('change_password', 'Api\AuthController@change_password');
 // });
- 
+
 Route::group(['middleware' => ['auth']], function() {
-    Route::get('user', 'UserController@getAuthenticatedUser');
+    Route::get('getAuthUser', 'UserController@getAuthenticatedUser');
     Route::post('changepassword', 'UserController@changePassword');
     Route::post('updateuser', 'UserController@updateUser');
     Route::post('updateprofilepicture', 'UserController@UpdateProfilePicture');

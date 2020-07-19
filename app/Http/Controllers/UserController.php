@@ -50,9 +50,9 @@ class UserController extends Controller
             'password' => Hash::make($request->get('password')),
             'username'=>$request->get('username')
         ]);
-        $user->assignRole('show posts');
+        // $user->assignRole('show posts');
 
-        return response()->json(["message"=>"User Created Successfully"],201);
+        return response()->json(["message"=>"Account Created Successfully"],201);
     }
 
     public function updateUser(Request $request)
@@ -61,8 +61,7 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'username' => 'required|string|max:255',
             'phone' => 'required|string|max:255',
-            'email' => 'required|string|email',
-            'id' => 'required',
+            'email' => 'required|string|email'
         ]);
 
         if($validator->fails()){
@@ -79,7 +78,7 @@ class UserController extends Controller
             'country_id'=>$request->get('country_id'),
         ]);
         // $user->assignRole('show posts');
-        return response()->json(["message"=>"User Created Successfully"],201);
+        return response()->json(["message"=>"Account Updated Successfully"],201);
     }
 
     public function UpdateProfilePicture(Request $request){
@@ -102,13 +101,13 @@ class UserController extends Controller
         User::where('id', Auth::user()->id)->update(['photo'=>$image_url]);
 
         return response()->json(['message'=>"Profile Photo Updated Successfully"]);
-        
+
     }
 
     public function changePassword(Request $request)
     {
         $ss = new MatchOldPassword;
-        
+
         $request->validate([
             'current_password' => ['required'],
             'new_password' => ['required'],
@@ -121,39 +120,39 @@ class UserController extends Controller
         $user->update(['password'=> Hash::make($request->new_password)]);
         return response()->json(["message"=>"User Password Changed Successfully"],201);
     }
-   
 
 
-    public function me()
+
+    public function getAuthenticatedUser()
     {
             $user = Auth::user();
             return response()->json(['data'=> $user], 200);
     }
 
-    public function getAuthenticatedUser()
-        {
-                try {
+    // public function getAuthenticatedUser()
+    // {
+        //         try {
 
-                        if (! $user = JWTAuth::parseToken()->authenticate()) {
-                                return response()->json(['user_not_found'], 404);
-                        }
+        //                 if (! $user = JWTAuth::parseToken()->authenticate()) {
+        //                         return response()->json(['user_not_found'], 404);
+        //                 }
 
-                } catch (Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
+        //         } catch (Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
 
-                        return response()->json(['token_expired'], $e->getStatusCode());
+        //                 return response()->json(['token_expired'], $e->getStatusCode());
 
-                } catch (Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
+        //         } catch (Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
 
-                        return response()->json(['token_invalid'], $e->getStatusCode());
+        //                 return response()->json(['token_invalid'], $e->getStatusCode());
 
-                } catch (Tymon\JWTAuth\Exceptions\JWTException $e) {
+        //         } catch (Tymon\JWTAuth\Exceptions\JWTException $e) {
 
-                        return response()->json(['token_absent'], $e->getStatusCode());
+        //                 return response()->json(['token_absent'], $e->getStatusCode());
 
-                }
+        //         }
 
-                return response()->json(compact('user'));
-        }
+        //         return response()->json(compact('user'));
+    // }
         public function saveImages(Request $request, $image_url)
         {
             $image = new Upload();
