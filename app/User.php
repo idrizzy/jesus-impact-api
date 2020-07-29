@@ -4,7 +4,6 @@ namespace App;
 
     use Illuminate\Notifications\Notifiable;
     use Illuminate\Foundation\Auth\User as Authenticatable;
-    use Spatie\Permission\Contracts\Role;
     use Spatie\Permission\Traits\HasRoles;
     use Tymon\JWTAuth\Contracts\JWTSubject;
 
@@ -40,7 +39,7 @@ namespace App;
         }
 
         public function role(){
-            $this->belongsTo(Role::class,'role_id');
+            return $this->belongsTo('App\Role');
         }
 
     /**

@@ -130,8 +130,8 @@ class UserController extends Controller
     public function getAuthenticatedUser()
     {
             $user = Auth::user();
-            $role = $user->role;
-            return response()->json(['data'=> $user,'role'=>$role], 200);
+            $role = $user->roles->pluck('id');
+            return response()->json(['data'=> $user], 200);
     }
 
     // public function getAuthenticatedUser()
