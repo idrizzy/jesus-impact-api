@@ -26,7 +26,6 @@ class PasswordResetController extends Controller
             return response()->json([
                 'message' => 'We can\'t find a user with that e-mail address.'
             ], 404);
-            dd(12345);
         $passwordReset = PasswordReset::create(
             // ['email' => $user->email],
             [
@@ -51,6 +50,7 @@ class PasswordResetController extends Controller
      */
     public function find($token)
     {
+        
         $passwordReset = PasswordReset::where('token', $token)
             ->first();
         if (!$passwordReset)
@@ -63,7 +63,7 @@ class PasswordResetController extends Controller
                 'message' => 'This password reset token is invalid.'
             ], 404);
         }
-        return response()->json($passwordReset);
+        return response()->json(['email' => $passwordReset->email, 'token'=> $token],200);
     }
      /**
      * Reset password
@@ -99,6 +99,6 @@ class PasswordResetController extends Controller
         $user->save();
         $passwordReset->delete();
         $user->notify(new PasswordResetSuccess($passwordReset));
-        return response()->json($user);
+        return response()->json(['message'=> 'Password Changed Successfully'],200);
     }
 }
