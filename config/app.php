@@ -165,6 +165,7 @@ return [
         Spatie\Permission\PermissionServiceProvider::class,
         
         
+        
 
         /*
          * Package Service Providers...
@@ -234,6 +235,7 @@ return [
         'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class, 
         'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
         'Cloudder' => JD\Cloudder\Facades\Cloudder::class,
+        
 
     ],
 

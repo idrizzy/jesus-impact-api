@@ -19,6 +19,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::post('register', 'UserController@register');
+Route::get('test', 'UserController@test');
 Route::post('login', 'UserController@authenticate');
 Route::get('open', 'DataController@open');
 Route::get('viewpermissions', 'RolePermissionController@permissions');
@@ -34,7 +35,16 @@ Route::post('editrole', 'RolePermissionController@editRole');
 Route::post('deleterole', 'RolePermissionController@deleteRole');
 Route::post('deletepermission', 'RolePermissionController@deletePermission');
 
-// Route::post('forgot_password', 'Api\AuthController@forgot_password');
+Route::group([    
+    'namespace' => 'Auth',    
+    'middleware' => 'api',    
+    'prefix' => 'password'
+], function () {    
+    Route::post('create', 'PasswordResetController@create');
+    Route::get('find/{token}', 'PasswordResetController@find');
+    Route::post('reset', 'PasswordResetController@reset');
+});
+
 
 //  Route::group(['middleware' => 'auth:api'], function () {
 //  Route::post('change_password', 'Api\AuthController@change_password');

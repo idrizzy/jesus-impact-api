@@ -50,9 +50,13 @@ class UserController extends Controller
             'password' => Hash::make($request->get('password')),
             'username'=>$request->get('username')
         ]);
-        $user->assignRole('show posts');
+        $user->assignRole('Users');
 
         return response()->json(["message"=>"User Created Successfully"],201);
+    }
+    public function test(){
+        $user = User::where('id', 1)->first();
+        return $user->getPermissionsViaRoles();
     }
 
     public function updateUser(Request $request)
