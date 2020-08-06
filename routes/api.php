@@ -55,5 +55,8 @@ Route::group(['middleware' => ['auth']], function() {
     Route::post('changepassword', 'UserController@changePassword');
     Route::post('updateuser', 'UserController@updateUser');
     Route::post('updateprofilepicture', 'UserController@UpdateProfilePicture');
+
+    //User Create Feed
+    Route::post('/create/feed', 'FeedController@store');
     Route::get('closed', 'DataController@closed');
 });
