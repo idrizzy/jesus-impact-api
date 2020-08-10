@@ -91,7 +91,7 @@ class UserController extends Controller
         ]);
 
         if($validator->fails()){
-            return response()->json($validator->errors()->first(), 400);
+            return response()->json( ['message'=> $validator->errors()->first()], 400);
         }
 
         $image = $request->file('photo');
@@ -104,7 +104,7 @@ class UserController extends Controller
         $image_url= Cloudder::secureShow(Cloudder::getResult()["secure_url"]);
         User::where('id', Auth::user()->id)->update(['photo'=>$image_url]);
 
-        return response()->json(['message'=>"Profile Photo Updated Successfully"]);
+        return response()->json(['message'=>"Profile Photo Updated Successfully"],201);
 
     }
 
@@ -125,13 +125,19 @@ class UserController extends Controller
         return response()->json(["message"=>"User Password Changed Successfully"],201);
     }
 
-
+    public function toggleFollow(Request $request)
+    {
+        $user = User::find($request->user_id);
+        $currentUser = User::find(Auth::id());
+        $currentUser->toggleFollow($user);
+        return response()->json(['message'=> 'ok'],200);
+    }
 
     public function getAuthenticatedUser()
     {
             $user = Auth::user();
             $role = $user->roles->pluck('id');
-            return response()->json(['data'=> $user], 200);
+            return response()->json(['data'=> $user,'followers'=>$user->followers()->count(),'followings'=>$user->followings()->count()], 200);
     }
 
     // public function getAuthenticatedUser()
