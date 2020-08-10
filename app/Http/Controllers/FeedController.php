@@ -39,6 +39,7 @@ class FeedController extends Controller
      */
     public function store(Request $request)
     {
+        return response()->json(['message' => $request->all()], 200);
         $validate  = Validator::make($request->all(), [
             'postType' => ['required', 'string'],
             'content' => ['required', 'string'],
@@ -49,9 +50,9 @@ class FeedController extends Controller
         }
         $data = $request->only(['content','postType']);
         $data['user_id'] = Auth::id();
-        
+
         $feed = new Feed($data);
-        $save = $feed->save(); 
+        $save = $feed->save();
         if ($save) {
             if ($request->postType == 'image') {
                 if ($request->hasFile('filename')){
@@ -62,7 +63,7 @@ class FeedController extends Controller
                         foreach ($picture as $p) {
                             $pictures[] = $p;
                             $upload = Cloudder::upload($p, null,array("public_id" => "feed/".uniqid(), "width"=>600, "height"=>600, "crop"=>"scale", "fetch_format"=>"auto","quality"=>"auto",  "flags"=>array("progressive", "progressive:semi", "progressive:steep")));
-                            
+
                             if (!$upload) {
                                 return response()->json(['message'=>'Unable to upload file!!! Check  and try again'], 400);
                             }
@@ -97,9 +98,9 @@ class FeedController extends Controller
                                 "public_id" => "feed/".uniqid(),
                                 "chunk_size" => 6000000,
                                 "eager" => array(
-                                array("width" => 300, "height" => 300, "crop" => "pad", "audio_codec" => "none"), 
+                                array("width" => 300, "height" => 300, "crop" => "pad", "audio_codec" => "none"),
                                 array("width" => 160, "height" => 100, "crop" => "crop", "gravity" => "south", "audio_codec" => "none")
-                                ), 
+                                ),
                                 "eager_async" => TRUE)
                             );
                             if (!$upload) {
@@ -123,7 +124,7 @@ class FeedController extends Controller
                     }
                 }
             }
-            return response()->json(['status' => 'ok', 'message'=>'Feed Created Successfully!'], 201); 
+            return response()->json(['status' => 'ok', 'message'=>'Feed Created Successfully!'], 201);
         }
     }
 
