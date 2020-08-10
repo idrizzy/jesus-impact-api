@@ -132,6 +132,7 @@ class UserController extends Controller
         $currentUser->toggleFollow($user);
         return response()->json(['message'=> 'ok'],200);
     }
+    
 
     public function getAuthenticatedUser()
     {
