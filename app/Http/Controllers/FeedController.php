@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Feed;
 use App\Models\File;
+use App\User;
 use Illuminate\Http\Request;
 use Validator;
 use Auth;
@@ -13,12 +14,16 @@ class FeedController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
+     * 
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        //
+        $user = User::find(Auth::id());
+        $userIds = $user->followings()->pluck('user_id');
+        $userIds[] = $user->id;
+        dd($userIds);
+        return Feed::whereIn('user_id', $userIds)->latest()->get();
     }
 
     /**
@@ -56,6 +61,7 @@ class FeedController extends Controller
             if ($request->postType == 'image') {
                 if ($request->hasFile('filename')){
                     $picture = $request->file('filename');
+                    return $picture;
                     if (is_array($picture)) {
                         $pictures = [];
                         $image_urls = [];
