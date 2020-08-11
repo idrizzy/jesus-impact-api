@@ -42,7 +42,6 @@ class FeedController extends Controller
         // return response()->json(['message' => $request->all()], 200);
         $validate  = Validator::make($request->all(), [
             'postType' => ['required', 'string'],
-            'content' => ['required', 'string'],
         ]);
 
         if($validate->fails()){
