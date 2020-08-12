@@ -1,5 +1,6 @@
 <?php
 
+use App\User;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
@@ -40,5 +41,19 @@ class RolesAndPermissionsSeeder extends Seeder
         $role = Role::create([ 'name' => 'Users' ]);
         $role->givePermissionTo('Create Feed');
 
+        $user = User::firstOrCreate(
+            [
+                'name' => "Crownbirth Limited",
+                'username' => "Crownbirth Limited",
+                'email' => "crownbirth@gmail.com",
+                'phone' => "08058684616",
+                'dob' => "10, C.O, prince Adenubi",
+                'gender' => "Male",
+                'photo' => "https://res.cloudinary.com/crownbirthltd/image/upload/v1594917129/mfeiinviispiw55pbvdh.png",
+                'country_id' => "1",
+                'password' => bcrypt('12345'),
+            ]
+        );
+        $user->assignRole('SuperAdmin');
     }
 }
