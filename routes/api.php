@@ -65,6 +65,10 @@ Route::group(['middleware' => ['auth']], function() {
     Route::post('/feed/comment', 'CommentController@store');
     Route::post('/feed/reply', 'CommentController@replyStore');
 
+    //feed like and dislike
+    Route::post('/feed/like', 'FeedController@toggleLike');
+    Route::post('/feed/unlike', 'FeedController@toggleLike');
+
     //FOLLOW AND UNFOLLOW
     Route::post('/user/follow', 'UserController@toggleFollow');
     Route::post('/user/unfollow', 'UserController@toggleFollow');

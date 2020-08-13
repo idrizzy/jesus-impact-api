@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\App;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
-
 class UserController extends Controller
 {
     public function authenticate(Request $request)
@@ -132,7 +131,7 @@ class UserController extends Controller
         $currentUser->toggleFollow($user);
         return response()->json(['message'=> 'ok'],200);
     }
-    
+
 
     public function getAuthenticatedUser()
     {

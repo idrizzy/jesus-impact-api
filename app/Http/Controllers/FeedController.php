@@ -25,14 +25,14 @@ class FeedController extends Controller
         $following[$user->id] = $user->id;
         $newFriendArray = array_replace($followers,$following);
         $ids = collect($newFriendArray)->keys()->all();
-        $feeds = Feed::with(array('user'=> function($query){ $query->select('name','username','id','photo'); }))->with('files')->with(array('comments'=> function($query){ $query->with(array('replies'=> function($query){ $query->with('replies'); })); }))->select('id','user_id','postType','content','created_at')->whereIn('user_id', $ids)->latest()->get();
+        $feeds = Feed::with('likes')->with(array('user'=> function($query){ $query->select('name','username','id','photo'); }))->with('files')->with(array('comments'=> function($query){ $query->with(array('replies'=> function($query){ $query->with('replies'); })); }))->select('id','user_id','postType','content','created_at')->whereIn('user_id', $ids)->latest()->get();
         return response()->json(['data'=> $feeds], 200);
     }
 
     public function toggleLike(Request $request)
     {
         $user = User::find($request->user_id);
-        $feed = Feed::find($request->user_id);
+        $feed = Feed::find($request->feed_id);
         $user->toggleLike($feed);
         return response()->json(['message'=> 'ok'],200);
     }
