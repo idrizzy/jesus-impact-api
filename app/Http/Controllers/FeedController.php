@@ -14,16 +14,19 @@ class FeedController extends Controller
 {
     /**
      * Display a listing of the resource.
-     * 
+     *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
         $user = User::find(Auth::id());
-        $userIds = $user->followings()->pluck('user_id');
-        $userIds[] = $user->id;
-        dd($userIds);
-        return Feed::whereIn('user_id', $userIds)->latest()->get();
+        $following = array_flip($user->followings->pluck('id')->toArray());
+        $followers = array_flip($user->followers->pluck('id')->toArray());
+        $following[$user->id] = $user->id;
+        $newFriendArray = array_replace($followers,$following);
+        $ids = collect($newFriendArray)->keys()->all();
+        $feeds = Feed::with('files')->with(array('comments'=> function($query){ $query->with(array('replies'=> function($query){ $query->with('replies'); })); }))->select('id','user_id','postType','content','created_at')->whereIn('user_id', $ids)->latest()->get();
+        return response()->json(['data'=> $feeds], 200);
     }
 
     /**
@@ -61,7 +64,6 @@ class FeedController extends Controller
             if ($request->postType == 'image') {
                 if ($request->hasFile('filename')){
                     $picture = $request->file('filename');
-                    return $picture;
                     if (is_array($picture)) {
                         $pictures = [];
                         $image_urls = [];

@@ -56,9 +56,14 @@ Route::group(['middleware' => ['auth']], function() {
     Route::post('updateuser', 'UserController@updateUser');
     Route::post('updateprofilepicture', 'UserController@UpdateProfilePicture');
 
-    //User Create Feed
+    //User Feed
     Route::post('/create/feed', 'FeedController@store');
+    Route::get('/user/feeds', 'FeedController@index');
     Route::get('closed', 'DataController@closed');
+
+    //user comment
+    Route::post('/feed/comment', 'CommentController@store');
+    Route::post('/feed/reply', 'CommentController@replyStore');
 
     //FOLLOW AND UNFOLLOW
     Route::post('/user/follow', 'UserController@toggleFollow');
