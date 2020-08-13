@@ -3,10 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
+use Overtrue\LaravelLike\Traits\Likeable;
 class Feed extends Model
 {
-    //
+    use Likeable;
     protected $fillable = ['user_id','content','postType','status'];
 
     public function user()

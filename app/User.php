@@ -7,10 +7,12 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Spatie\Permission\Traits\HasRoles;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Overtrue\LaravelFollow\Followable;
+use Overtrue\LaravelLike\Traits\Liker;
+
 class User extends Authenticatable implements JWTSubject
 {
         use Notifiable, HasRoles;
-        use Followable;
+        use Followable, Liker;
         protected $guard_name = 'api';
     /**
      * The attributes that are mass assignable.
