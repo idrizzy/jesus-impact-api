@@ -15,6 +15,12 @@ use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 class UserController extends Controller
 {
+    public function logout()
+    {
+        $this->guard()->logout();
+
+        return response()->json(['message' => 'Successfully logged out']);
+    }
     public function authenticate(Request $request)
     {
         $credentials = $request->only('email', 'password');
