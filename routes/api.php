@@ -59,6 +59,7 @@ Route::group(['middleware' => ['auth']], function() {
     //User Feed
     Route::post('/create/feed', 'FeedController@store');
     Route::get('/user/feeds', 'FeedController@index');
+    Route::get('/user/feed/{id}', 'FeedController@show');
     Route::get('closed', 'DataController@closed');
 
     //user comment

@@ -17,6 +17,25 @@ class FeedController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function show($id)
+    {
+        $user = User::find(Auth::id());
+        $following = array_flip($user->followings->pluck('id')->toArray());
+        $followers = array_flip($user->followers->pluck('id')->toArray());
+        $following[$user->id] = $user->id;
+        $newFriendArray = array_replace($followers,$following);
+        $ids = collect($newFriendArray)->keys()->all();
+        $feeds = Feed::with('likes')
+                     ->with('likers')
+                     ->with(array('user'=> function($query){ $query->select('name','username','id','photo'); }))
+                     ->with('files')
+                     ->with(array('comments'=> function($query){ $query->with(array('replies'=> function($query){ $query->with('replies'); })); }))
+                     ->select('id','user_id','postType','content','created_at')
+                     ->where('id',$id)
+                     ->first();
+        return response()->json(['data'=> $feeds], 200);
+    }
+    
     public function index()
     {
         $user = User::find(Auth::id());
@@ -26,6 +45,7 @@ class FeedController extends Controller
         $newFriendArray = array_replace($followers,$following);
         $ids = collect($newFriendArray)->keys()->all();
         $feeds = Feed::with('likes')
+                     ->with('likers')
                      ->with(array('user'=> function($query){ $query->select('name','username','id','photo'); }))
                      ->with('files')
                      ->with(array('comments'=> function($query){ $query->with(array('replies'=> function($query){ $query->with('replies'); })); }))
