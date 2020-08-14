@@ -35,11 +35,11 @@ Route::post('editrole', 'RolePermissionController@editRole');
 Route::post('deleterole', 'RolePermissionController@deleteRole');
 Route::post('deletepermission', 'RolePermissionController@deletePermission');
 
-Route::group([    
-    'namespace' => 'Auth',    
-    'middleware' => 'api',    
+Route::group([
+    'namespace' => 'Auth',
+    'middleware' => 'api',
     'prefix' => 'password'
-], function () {    
+], function () {
     Route::post('create', 'PasswordResetController@create');
     Route::get('find/{token}', 'PasswordResetController@find');
     Route::post('reset', 'PasswordResetController@reset');
@@ -55,5 +55,17 @@ Route::group(['middleware' => ['auth']], function() {
     Route::post('changepassword', 'UserController@changePassword');
     Route::post('updateuser', 'UserController@updateUser');
     Route::post('updateprofilepicture', 'UserController@UpdateProfilePicture');
+
+    //User Feed
+    Route::post('/create/feed', 'FeedController@store');
+    Route::get('/user/feeds', 'FeedController@index');
     Route::get('closed', 'DataController@closed');
+
+    //user comment
+    Route::post('/feed/comment', 'CommentController@store');
+    Route::post('/feed/reply', 'CommentController@replyStore');
+
+    //FOLLOW AND UNFOLLOW
+    Route::post('/user/follow', 'UserController@toggleFollow');
+    Route::post('/user/unfollow', 'UserController@toggleFollow');
 });

@@ -8,6 +8,8 @@ use App\Notifications\PasswordResetSuccess;
 use App\User;
 use Illuminate\Support\Str;
 use App\PasswordReset;
+use Illuminate\Support\Facades\Hash;
+
 class PasswordResetController extends Controller
 {
     /**
@@ -50,7 +52,7 @@ class PasswordResetController extends Controller
      */
     public function find($token)
     {
-        
+
         $passwordReset = PasswordReset::where('token', $token)
             ->first();
         if (!$passwordReset)
@@ -95,7 +97,7 @@ class PasswordResetController extends Controller
             return response()->json([
                 'message' => 'We can\'t find a user with that e-mail address.'
             ], 404);
-        $user->password = bcrypt($request->password);
+        $user->password = Hash::make($request->password);
         $user->save();
         $passwordReset->delete();
         $user->notify(new PasswordResetSuccess($passwordReset));
