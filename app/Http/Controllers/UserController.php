@@ -138,7 +138,20 @@ class UserController extends Controller
         return response()->json(['message'=> 'ok'],200);
     }
 
-
+    public function users(Request $request)
+    {
+        if ($request->search) {
+            $search = $request->search;
+            $allRandomUsers =  User::where('username', 'like', '%' . $search . '%')->orWhere('name', 'like', '%' . $search . '%')->orderByRaw('RAND()')->take(50)->get();
+            return response()->json(['data'=> $allRandomUsers],200);
+        }
+        $user = User::find(Auth::id());
+        $following = array_flip($user->followings->pluck('id')->toArray());
+        $following[$user->id] = $user->id;
+        $ids = collect($following)->keys()->all();
+        $allRandomUsers =  User::whereNotIn('id',$ids)->orderByRaw('RAND()')->take(15)->get();
+        return response()->json(['data'=> $allRandomUsers],200);
+    }
     public function getAuthenticatedUser()
     {
             $user = Auth::user();

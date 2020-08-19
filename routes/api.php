@@ -74,5 +74,9 @@ Route::group(['middleware' => ['auth']], function() {
     Route::post('/user/follow', 'UserController@toggleFollow');
     Route::post('/user/unfollow', 'UserController@toggleFollow');
 
+    //lIST USERS
+    Route::get('/users/list', 'UserController@users');
+    Route::post('/users/search', 'UserController@users');
+
     Route::get('/logout', 'UserController@logout');
 });
