@@ -59,6 +59,7 @@ class UserController extends Controller
 
         return response()->json(["message"=>"Account Created Successfully"],201);
     }
+
     public function test(){
         $user = User::where('id', 1)->first();
         return $user->getPermissionsViaRoles();
@@ -159,36 +160,24 @@ class UserController extends Controller
             return response()->json(['data'=> $user,'followers'=>$user->followers()->count(),'followings'=>$user->followings()->count()], 200);
     }
 
-    // public function getAuthenticatedUser()
-    // {
-        //         try {
+    public function followings()
+    {
+        $user = Auth::user();
+        return response()->json(['data'=> $user->followings], 200);
+    }
 
-        //                 if (! $user = JWTAuth::parseToken()->authenticate()) {
-        //                         return response()->json(['user_not_found'], 404);
-        //                 }
+    public function followers()
+    {
+        $user = Auth::user();
+        return response()->json(['data'=> $user->followers], 200);
+    }
 
-        //         } catch (Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
+    public function saveImages(Request $request, $image_url)
+    {
+        $image = new Upload();
+        $image->image_name = $request->file('image_name')->getClientOriginalName();
+        $image->image_url = $image_url;
 
-        //                 return response()->json(['token_expired'], $e->getStatusCode());
-
-        //         } catch (Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
-
-        //                 return response()->json(['token_invalid'], $e->getStatusCode());
-
-        //         } catch (Tymon\JWTAuth\Exceptions\JWTException $e) {
-
-        //                 return response()->json(['token_absent'], $e->getStatusCode());
-
-        //         }
-
-        //         return response()->json(compact('user'));
-    // }
-        public function saveImages(Request $request, $image_url)
-        {
-            $image = new Upload();
-            $image->image_name = $request->file('image_name')->getClientOriginalName();
-            $image->image_url = $image_url;
-
-            $image->save();
-        }
+        $image->save();
+    }
 }

@@ -60,6 +60,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::post('/create/feed', 'FeedController@store');
     Route::get('/user/feeds', 'FeedController@index');
     Route::get('/user/feed/{id}', 'FeedController@show');
+    Route::get('/my/feeds', 'FeedController@myFeeds');
     Route::get('closed', 'DataController@closed');
 
     //user comment
@@ -73,6 +74,8 @@ Route::group(['middleware' => ['auth']], function() {
     //FOLLOW AND UNFOLLOW
     Route::post('/user/follow', 'UserController@toggleFollow');
     Route::post('/user/unfollow', 'UserController@toggleFollow');
+    Route::get('/user/followers', 'UserController@followers');
+    Route::get('/user/followings', 'UserController@followings');
 
     //lIST USERS
     Route::get('/users/list', 'UserController@users');

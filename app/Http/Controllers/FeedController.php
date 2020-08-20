@@ -35,7 +35,7 @@ class FeedController extends Controller
                      ->first();
         return response()->json(['data'=> $feeds], 200);
     }
-    
+
     public function index()
     {
         $user = User::find(Auth::id());
@@ -51,6 +51,20 @@ class FeedController extends Controller
                      ->with(array('comments'=> function($query){ $query->with(array('replies'=> function($query){ $query->with('replies'); })); }))
                      ->select('id','user_id','postType','content','created_at')
                      ->whereIn('user_id', $ids)
+                     ->latest()->get();
+        return response()->json(['data'=> $feeds], 200);
+    }
+
+    public function myFeeds()
+    {
+        $user = User::find(Auth::id());
+        $feeds = Feed::with('likes')
+                     ->with('likers')
+                     ->with(array('user'=> function($query){ $query->select('name','username','id','photo'); }))
+                     ->with('files')
+                     ->with(array('comments'=> function($query){ $query->with(array('replies'=> function($query){ $query->with('replies'); })); }))
+                     ->select('id','user_id','postType','content','created_at')
+                     ->where('user_id', $user->id)
                      ->latest()->get();
         return response()->json(['data'=> $feeds], 200);
     }
