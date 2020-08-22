@@ -68,4 +68,10 @@ Route::group(['middleware' => ['auth']], function() {
     //FOLLOW AND UNFOLLOW
     Route::post('/user/follow', 'UserController@toggleFollow');
     Route::post('/user/unfollow', 'UserController@toggleFollow');
+
+    // BAN & UNBAN USER
+    Route::post('/user/ban', 'UserController@banUser');
+    Route::post('/user/unban', 'UserController@unBanUser');
+    Route::get('/user/active', 'UserController@activeUsers');
+    Route::get('/user/inactive', 'UserController@inActiveUsers');
 });

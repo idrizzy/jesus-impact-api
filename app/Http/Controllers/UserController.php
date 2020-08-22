@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\App;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\Traits\HasRoles;
 
 class UserController extends Controller
 {
@@ -172,5 +173,41 @@ class UserController extends Controller
             $image->image_url = $image_url;
 
             $image->save();
+        }
+
+        public function banUser(Request $request){
+            $user = User::where('id', Auth()->id);
+            if($user->hasRole('superAdmin')){
+                $ban = User::where('id', $request->id);
+                $ban->update([
+                    'status' => 'inactive'
+                ]);
+                return response()->json(['message', 'User Banned Successfully'], 200);
+            }
+            return response()->json(['error', 'User Does not have permissions to perfrom this operation'], 200);
+        }
+
+        public function unBanUser(Request $request){
+            $user = User::where('id', Auth()->id);
+            if($user->hasRole('superAdmin')){
+                $unban = User::where('id', $request->id);
+                $unban->update([
+                    'status' => 'active'
+                ]);
+                return response()->json(['message', 'User Activated Successfully'], 200);
+            }
+            return response()->json(['error', 'User Does not have permissions to perfrom this operation'], 200);
+
+        }
+
+        public function activeUsers(){
+            $data = User::where('status', 'active')->get();
+            return $data;
+            return response()->json(['data',$data], 200);
+        }
+
+        public function inActiveUsers(){
+            $data = User::where('status', 'inactive')->get();
+            return response()->json(['data',$data], 200);
         }
 }
