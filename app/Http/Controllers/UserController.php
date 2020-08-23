@@ -184,38 +184,54 @@ class UserController extends Controller
         }
 
         public function banUser(Request $request){
-            $user = User::where('id', Auth()->id);
-            if($user->hasRole('superAdmin')){
+            $user = Auth::user();
+            if($user->roles[0]->name == 'SuperAdmin'){
                 $ban = User::where('id', $request->id);
                 $ban->update([
                     'status' => 'inactive'
                 ]);
-                return response()->json(['message', 'User Banned Successfully'], 200);
+                return response()->json(['message'=>'User Banned Successfully'], 200);
             }
-            return response()->json(['error'=>'User Does not have permissions to perfrom this operation'], 200);
+            return response()->json(['error'=>'User Does not have permissions to perfrom this operation'], 403);
         }
 
         public function unBanUser(Request $request){
-            $user = User::where('id', Auth()->id);
-            if($user->hasRole('superAdmin')){
+            $user = Auth::user();
+            if($user->roles[0]->name == 'SuperAdmin'){
                 $unban = User::where('id', $request->id);
                 $unban->update([
                     'status' => 'active'
                 ]);
                 return response()->json(['message'=>'User Activated Successfully'], 200);
             }
-            return response()->json(['error'=>'User Does not have permissions to perfrom this operation'], 200);
+            return response()->json(['error'=>'User Does not have permissions to perfrom this operation'], 403);
 
         }
 
         public function activeUsers(){
-            $data = User::where('status', 'active')->get();
-            return $data;
-            return response()->json(['data'=>$data], 200);
+            $user = Auth::user();
+            if($user->roles[0]->name == 'SuperAdmin'){
+                $data = User::where('status', 'active')->get();
+                return response()->json(['data'=>$data], 200);
+            }
+            return response()->json(['error'=>'User Does not have permissions to perfrom this operation'], 403);
         }
 
         public function inActiveUsers(){
-            $data = User::where('status', 'inactive')->get();
-            return response()->json(['data'=>$data], 200);
+            $user = Auth::user();
+            if($user->roles[0]->name == 'SuperAdmin'){
+                $data = User::where('status', 'inactive')->get();
+                return response()->json(['data'=>$data], 200);
+            }
+            return response()->json(['error'=>'User Does not have permissions to perfrom this operation'], 403);
+        }
+
+        public function allUsers(){
+            $user = Auth::user();
+            if($user->roles[0]->name == 'SuperAdmin'){
+                $data = User::all();
+                return response()->json(['data'=>$data], 200);
+            }
+            return response()->json(['error'=>'User Does not have permissions to perfrom this operation'], 403);
         }
 }
