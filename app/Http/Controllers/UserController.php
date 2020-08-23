@@ -180,7 +180,6 @@ class UserController extends Controller
         $image->image_name = $request->file('image_name')->getClientOriginalName();
         $image->image_url = $image_url;
 
-<<<<<<< HEAD
             $image->save();
         }
 
@@ -193,7 +192,7 @@ class UserController extends Controller
                 ]);
                 return response()->json(['message', 'User Banned Successfully'], 200);
             }
-            return response()->json(['error', 'User Does not have permissions to perfrom this operation'], 200);
+            return response()->json(['error'=>'User Does not have permissions to perfrom this operation'], 200);
         }
 
         public function unBanUser(Request $request){
@@ -203,24 +202,20 @@ class UserController extends Controller
                 $unban->update([
                     'status' => 'active'
                 ]);
-                return response()->json(['message', 'User Activated Successfully'], 200);
+                return response()->json(['message'=>'User Activated Successfully'], 200);
             }
-            return response()->json(['error', 'User Does not have permissions to perfrom this operation'], 200);
+            return response()->json(['error'=>'User Does not have permissions to perfrom this operation'], 200);
 
         }
 
         public function activeUsers(){
             $data = User::where('status', 'active')->get();
             return $data;
-            return response()->json(['data',$data], 200);
+            return response()->json(['data'=>$data], 200);
         }
 
         public function inActiveUsers(){
             $data = User::where('status', 'inactive')->get();
-            return response()->json(['data',$data], 200);
+            return response()->json(['data'=>$data], 200);
         }
-=======
-        $image->save();
-    }
->>>>>>> 030cbd1303e45d589b4de5323862941afedf7078
 }
