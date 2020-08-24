@@ -59,11 +59,17 @@ Route::group(['middleware' => ['auth']], function() {
     //User Feed
     Route::post('/create/feed', 'FeedController@store');
     Route::get('/user/feeds', 'FeedController@index');
+    Route::get('/user/feed/{id}', 'FeedController@show');
+    Route::get('/my/feeds', 'FeedController@myFeeds');
     Route::get('closed', 'DataController@closed');
 
     //user comment
     Route::post('/feed/comment', 'CommentController@store');
     Route::post('/feed/reply', 'CommentController@replyStore');
+
+    //feed like and dislike
+    Route::post('/feed/like', 'FeedController@toggleLike');
+    Route::post('/feed/unlike', 'FeedController@toggleLike');
 
     //FOLLOW AND UNFOLLOW
     Route::post('/user/follow', 'UserController@toggleFollow');
@@ -74,4 +80,12 @@ Route::group(['middleware' => ['auth']], function() {
     Route::post('/user/unban', 'UserController@unBanUser');
     Route::get('/user/active', 'UserController@activeUsers');
     Route::get('/user/inactive', 'UserController@inActiveUsers');
+    Route::get('/user/followers', 'UserController@followers');
+    Route::get('/user/followings', 'UserController@followings');
+
+    //lIST USERS
+    Route::get('/users/list', 'UserController@users');
+    Route::post('/users/search', 'UserController@users');
+
+    Route::get('/logout', 'UserController@logout');
 });

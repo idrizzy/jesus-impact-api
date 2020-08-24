@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6fae336e38bb001b1fa4021f6928d84a",
+    "content-hash": "e45dc25f30cb188bb418e670e8e2973f",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1629,6 +1629,67 @@
             ],
             "description": "User follow unfollow system for Laravel.",
             "time": "2020-04-25T16:04:44+00:00"
+        },
+        {
+            "name": "overtrue/laravel-like",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/overtrue/laravel-like.git",
+                "reference": "fdfc9d53da02d3c6ae37a5fd72a5b7ef6c37ddd2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/overtrue/laravel-like/zipball/fdfc9d53da02d3c6ae37a5fd72a5b7ef6c37ddd2",
+                "reference": "fdfc9d53da02d3c6ae37a5fd72a5b7ef6c37ddd2",
+                "shasum": ""
+            },
+            "require": {
+                "laravel/framework": "^5.5||~6.0||^7.0"
+            },
+            "require-dev": {
+                "brainmaestro/composer-git-hooks": "^2.7",
+                "friendsofphp/php-cs-fixer": "^2.16",
+                "laravel/framework": "^5.5",
+                "mockery/mockery": "^1.2",
+                "orchestra/testbench": "^3.7",
+                "phpunit/phpunit": "~8.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Overtrue\\LaravelLike\\LikeServiceProvider"
+                    ]
+                },
+                "hooks": {
+                    "pre-commit": [
+                        "composer test",
+                        "composer fix-style"
+                    ],
+                    "pre-push": [
+                        "composer test",
+                        "composer check-style"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Overtrue\\LaravelLike\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "overtrue",
+                    "email": "anzhengchao@gmail.com"
+                }
+            ],
+            "description": "👍 User-like features for Laravel Application.",
+            "time": "2020-04-10T15:28:07+00:00"
         },
         {
             "name": "phpoption/phpoption",

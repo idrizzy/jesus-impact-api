@@ -17,6 +17,12 @@ use Spatie\Permission\Traits\HasRoles;
 
 class UserController extends Controller
 {
+    public function logout()
+    {
+        $this->guard()->logout();
+
+        return response()->json(['message' => 'Successfully logged out']);
+    }
     public function authenticate(Request $request)
     {
         $credentials = $request->only('email', 'password');
@@ -55,6 +61,7 @@ class UserController extends Controller
 
         return response()->json(["message"=>"Account Created Successfully"],201);
     }
+
     public function test(){
         $user = User::where('id', 1)->first();
         return $user->getPermissionsViaRoles();
@@ -133,8 +140,21 @@ class UserController extends Controller
         $currentUser->toggleFollow($user);
         return response()->json(['message'=> 'ok'],200);
     }
-    
 
+    public function users(Request $request)
+    {
+        if ($request->search) {
+            $search = $request->search;
+            $allRandomUsers =  User::where('username', 'like', '%' . $search . '%')->orWhere('name', 'like', '%' . $search . '%')->orderByRaw('RAND()')->take(50)->get();
+            return response()->json(['data'=> $allRandomUsers],200);
+        }
+        $user = User::find(Auth::id());
+        $following = array_flip($user->followings->pluck('id')->toArray());
+        $following[$user->id] = $user->id;
+        $ids = collect($following)->keys()->all();
+        $allRandomUsers =  User::whereNotIn('id',$ids)->orderByRaw('RAND()')->take(15)->get();
+        return response()->json(['data'=> $allRandomUsers],200);
+    }
     public function getAuthenticatedUser()
     {
             $user = Auth::user();
@@ -142,36 +162,25 @@ class UserController extends Controller
             return response()->json(['data'=> $user,'followers'=>$user->followers()->count(),'followings'=>$user->followings()->count()], 200);
     }
 
-    // public function getAuthenticatedUser()
-    // {
-        //         try {
+    public function followings()
+    {
+        $user = Auth::user();
+        return response()->json(['data'=> $user->followings], 200);
+    }
 
-        //                 if (! $user = JWTAuth::parseToken()->authenticate()) {
-        //                         return response()->json(['user_not_found'], 404);
-        //                 }
+    public function followers()
+    {
+        $user = Auth::user();
+        return response()->json(['data'=> $user->followers], 200);
+    }
 
-        //         } catch (Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
+    public function saveImages(Request $request, $image_url)
+    {
+        $image = new Upload();
+        $image->image_name = $request->file('image_name')->getClientOriginalName();
+        $image->image_url = $image_url;
 
-        //                 return response()->json(['token_expired'], $e->getStatusCode());
-
-        //         } catch (Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
-
-        //                 return response()->json(['token_invalid'], $e->getStatusCode());
-
-        //         } catch (Tymon\JWTAuth\Exceptions\JWTException $e) {
-
-        //                 return response()->json(['token_absent'], $e->getStatusCode());
-
-        //         }
-
-        //         return response()->json(compact('user'));
-    // }
-        public function saveImages(Request $request, $image_url)
-        {
-            $image = new Upload();
-            $image->image_name = $request->file('image_name')->getClientOriginalName();
-            $image->image_url = $image_url;
-
+<<<<<<< HEAD
             $image->save();
         }
 
@@ -210,4 +219,8 @@ class UserController extends Controller
             $data = User::where('status', 'inactive')->get();
             return response()->json(['data',$data], 200);
         }
+=======
+        $image->save();
+    }
+>>>>>>> 030cbd1303e45d589b4de5323862941afedf7078
 }

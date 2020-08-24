@@ -17,6 +17,25 @@ class FeedController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function show($id)
+    {
+        $user = User::find(Auth::id());
+        $following = array_flip($user->followings->pluck('id')->toArray());
+        $followers = array_flip($user->followers->pluck('id')->toArray());
+        $following[$user->id] = $user->id;
+        $newFriendArray = array_replace($followers,$following);
+        $ids = collect($newFriendArray)->keys()->all();
+        $feeds = Feed::with('likes')
+                     ->with('likers')
+                     ->with(array('user'=> function($query){ $query->select('name','username','id','photo'); }))
+                     ->with('files')
+                     ->with(array('comments'=> function($query){ $query->with(array('replies'=> function($query){ $query->with('replies'); })); }))
+                     ->select('id','user_id','postType','content','created_at')
+                     ->where('id',$id)
+                     ->first();
+        return response()->json(['data'=> $feeds], 200);
+    }
+
     public function index()
     {
         $user = User::find(Auth::id());
@@ -25,26 +44,39 @@ class FeedController extends Controller
         $following[$user->id] = $user->id;
         $newFriendArray = array_replace($followers,$following);
         $ids = collect($newFriendArray)->keys()->all();
-        $feeds = Feed::with('files')->with(array('comments'=> function($query){ $query->with(array('replies'=> function($query){ $query->with('replies'); })); }))->select('id','user_id','postType','content','created_at')->whereIn('user_id', $ids)->latest()->get();
+        $feeds = Feed::with('likes')
+                     ->with('likers')
+                     ->with(array('user'=> function($query){ $query->select('name','username','id','photo'); }))
+                     ->with('files')
+                     ->with(array('comments'=> function($query){ $query->with(array('replies'=> function($query){ $query->with('replies'); })); }))
+                     ->select('id','user_id','postType','content','created_at')
+                     ->whereIn('user_id', $ids)
+                     ->latest()->get();
         return response()->json(['data'=> $feeds], 200);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function myFeeds()
     {
-        //
+        $user = User::find(Auth::id());
+        $feeds = Feed::with('likes')
+                     ->with('likers')
+                     ->with(array('user'=> function($query){ $query->select('name','username','id','photo'); }))
+                     ->with('files')
+                     ->with(array('comments'=> function($query){ $query->with(array('replies'=> function($query){ $query->with('replies'); })); }))
+                     ->select('id','user_id','postType','content','created_at')
+                     ->where('user_id', $user->id)
+                     ->latest()->get();
+        return response()->json(['data'=> $feeds], 200);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    public function toggleLike(Request $request)
+    {
+        $user = User::find($request->user_id);
+        $feed = Feed::find($request->feed_id);
+        $user->toggleLike($feed);
+        return response()->json(['message'=> 'ok'],200);
+    }
+
     public function store(Request $request)
     {
         // return response()->json(['message' => $request->all()], 200);
@@ -135,46 +167,7 @@ class FeedController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Feed  $feed
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Feed $feed)
-    {
-        //
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Feed  $feed
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Feed $feed)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Feed  $feed
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Feed $feed)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Feed  $feed
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Feed $feed)
     {
         //
