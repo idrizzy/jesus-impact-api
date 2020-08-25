@@ -192,7 +192,7 @@ class UserController extends Controller
                 ]);
                 return response()->json(['message'=>'User Banned Successfully'], 200);
             }
-            return response()->json(['error'=>'User Does not have permissions to perfrom this operation'], 403);
+            return response()->json(['message'=>'User Does not have permissions to perfrom this operation'], 403);
         }
 
         public function unBanUser(Request $request){
@@ -204,7 +204,7 @@ class UserController extends Controller
                 ]);
                 return response()->json(['message'=>'User Activated Successfully'], 200);
             }
-            return response()->json(['error'=>'User Does not have permissions to perfrom this operation'], 403);
+            return response()->json(['message'=>'User Does not have permissions to perfrom this operation'], 403);
 
         }
 
@@ -214,7 +214,7 @@ class UserController extends Controller
                 $data = User::where('status', 'active')->get();
                 return response()->json(['data'=>$data], 200);
             }
-            return response()->json(['error'=>'User Does not have permissions to perfrom this operation'], 403);
+            return response()->json(['data'=>'User Does not have permissions to perfrom this operation'], 403);
         }
 
         public function inActiveUsers(){
@@ -223,7 +223,7 @@ class UserController extends Controller
                 $data = User::where('status', 'inactive')->get();
                 return response()->json(['data'=>$data], 200);
             }
-            return response()->json(['error'=>'User Does not have permissions to perfrom this operation'], 403);
+            return response()->json(['data'=>'User Does not have permissions to perfrom this operation'], 403);
         }
 
         public function allUsers(){
@@ -232,6 +232,6 @@ class UserController extends Controller
                 $data = User::all();
                 return response()->json(['data'=>$data], 200);
             }
-            return response()->json(['error'=>'User Does not have permissions to perfrom this operation'], 403);
+            return response()->json(['data'=>'User Does not have permissions to perfrom this operation'], 403);
         }
 }
