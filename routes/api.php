@@ -57,6 +57,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::post('updateprofilepicture', 'UserController@UpdateProfilePicture');
 
     //User Feed
+    Route::get('/delete/feed/{feedid}', 'FeedController@destroy');
     Route::post('/create/feed', 'FeedController@store');
     Route::get('/user/feeds', 'FeedController@index');
     Route::get('/user/feed/{id}', 'FeedController@show');

@@ -184,8 +184,13 @@ class FeedController extends Controller
     }
 
 
-    public function destroy(Feed $feed)
+    public function destroy($feed)
     {
-        //
+        $getUserFeed = Feed::where('user_id',Auth::id())->where('id',$feed)->first();
+        if ($getUserFeed) {
+            Feed::where('id',$feed)->destroy();
+            return response()->json(['message'=> 'Feed Deleted Successfully'], 200);
+        }
+        return response()->json(['message'=> 'You are not allowed to delete this feed'], 403);
     }
 }
