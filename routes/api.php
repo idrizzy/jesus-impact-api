@@ -57,11 +57,13 @@ Route::group(['middleware' => ['auth']], function() {
     Route::post('updateprofilepicture', 'UserController@UpdateProfilePicture');
 
     //User Feed
+    Route::get('/delete/feed/{feedid}', 'FeedController@destroy');
     Route::post('/create/feed', 'FeedController@store');
     Route::get('/user/feeds', 'FeedController@index');
     Route::get('/user/feed/{id}', 'FeedController@show');
     Route::get('/my/feeds', 'FeedController@myFeeds');
     Route::get('closed', 'DataController@closed');
+    Route::get('user/{id}', 'FeedController@userFeeds');
 
     //user comment
     Route::post('/feed/comment', 'CommentController@store');
@@ -74,14 +76,16 @@ Route::group(['middleware' => ['auth']], function() {
     //FOLLOW AND UNFOLLOW
     Route::post('/user/follow', 'UserController@toggleFollow');
     Route::post('/user/unfollow', 'UserController@toggleFollow');
+    Route::get('/user/followers', 'UserController@followers');
+    Route::get('/user/followings', 'UserController@followings');
 
     // BAN & UNBAN USER
     Route::post('/user/ban', 'UserController@banUser');
     Route::post('/user/unban', 'UserController@unBanUser');
     Route::get('/user/active', 'UserController@activeUsers');
     Route::get('/user/inactive', 'UserController@inActiveUsers');
-    Route::get('/user/followers', 'UserController@followers');
-    Route::get('/user/followings', 'UserController@followings');
+    Route::get('/user/all', 'UserController@allUsers');
+
 
     //lIST USERS
     Route::get('/users/list', 'UserController@users');

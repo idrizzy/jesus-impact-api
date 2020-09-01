@@ -69,6 +69,22 @@ class FeedController extends Controller
         return response()->json(['data'=> $feeds], 200);
     }
 
+    public function userFeeds($id)
+    {
+        $user = User::find($id);
+        $feeds = Feed::with('likes')
+                     ->with('likers')
+                     ->with(array('user'=> function($query){ $query->select('name','username','id','photo'); }))
+                     ->with('files')
+                     ->with(array('comments'=> function($query){ $query->with(array('replies'=> function($query){ $query->with('replies'); })); }))
+                     ->select('id','user_id','postType','content','created_at')
+                     ->where('user_id', $id)
+                     ->latest()->get();
+        $followers = $user->followers;
+        $followings = $user->followings;
+        return response()->json(['data'=> $feeds,'followers'=>$followers, 'followings'=>$followings,'user'=>$user], 200);
+    }
+
     public function toggleLike(Request $request)
     {
         $user = User::find($request->user_id);
@@ -168,8 +184,13 @@ class FeedController extends Controller
     }
 
 
-    public function destroy(Feed $feed)
+    public function destroy($feed)
     {
-        //
+        $getUserFeed = Feed::where('user_id',Auth::id())->where('id',$feed)->first();
+        if ($getUserFeed) {
+            Feed::where('id',$feed)->delete();
+            return response()->json(['message'=> 'Feed Deleted Successfully'], 200);
+        }
+        return response()->json(['message'=> 'You are not allowed to delete this feed'], 403);
     }
 }
