@@ -86,6 +86,31 @@ Route::group(['middleware' => ['auth']], function() {
     //lIST USERS
     Route::get('/users/list', 'UserController@users');
     Route::post('/users/search', 'UserController@users');
+    
+    // categories
+    Route::get('/categories', 'CategoryController@index');
+    Route::get('/categories/{id}', 'CategoryController@show');
+    Route::post('/categories', 'CategoryController@create');
+    Route::post('/categories/{id}/update', 'CategoryController@update');
+    Route::post('/categories/{id}/delete', 'CategoryController@destroy');
 
+    // tags
+    Route::get('/tags', 'TagsController@index');
+    Route::get('/tags/{id}', 'TagsController@show');
+    Route::post('/tags', 'TagsController@create');
+    Route::post('/tags/{id}/update', 'TagsController@update');
+    Route::post('/tags/{id}/delete', 'TagsController@destroy');
+
+
+    // blog Posts
+    // tags
+    Route::get('/blogPost', 'BlogPostController@index');
+    Route::get('/blogPost/{id}', 'BlogPostController@show');
+    Route::post('/blogPost', 'BlogPostController@create');
+    Route::post('/blogPost/{id}/update', 'BlogPostController@update');
+    Route::post('/blogPost/{id}/delete', 'BlogPostController@destroy');
+
+
+    // Logout Route for the Application
     Route::get('/logout', 'UserController@logout');
 });

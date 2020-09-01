@@ -13,8 +13,6 @@ use Illuminate\Support\Facades\App;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
-use Spatie\Permission\Traits\HasRoles;
-
 class UserController extends Controller
 {
     public function logout()
@@ -94,6 +92,7 @@ class UserController extends Controller
     }
 
     public function UpdateProfilePicture(Request $request){
+        
         $validator = Validator::make($request->all(), [
             'photo'=>'required|mimes:jpeg,bmp,jpg,png|between:1, 6000',
         ]);
@@ -180,7 +179,6 @@ class UserController extends Controller
         $image->image_name = $request->file('image_name')->getClientOriginalName();
         $image->image_url = $image_url;
 
-<<<<<<< HEAD
             $image->save();
         }
 
@@ -219,8 +217,4 @@ class UserController extends Controller
             $data = User::where('status', 'inactive')->get();
             return response()->json(['data',$data], 200);
         }
-=======
-        $image->save();
-    }
->>>>>>> 030cbd1303e45d589b4de5323862941afedf7078
 }
