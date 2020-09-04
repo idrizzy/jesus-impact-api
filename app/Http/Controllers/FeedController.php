@@ -80,8 +80,8 @@ class FeedController extends Controller
                      ->select('id','user_id','postType','content','created_at')
                      ->where('user_id', $id)
                      ->latest()->get();
-        $followers = $user->followers;
-        $followings = $user->followings;
+        $followers = ($user->followers) ? $user->followers : 0;
+        $followings = ($user->followings) ? $user->followings : 0;
         return response()->json(['data'=> $feeds,'followers'=>$followers, 'followings'=>$followings,'user'=>$user], 200);
     }
 
