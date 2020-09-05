@@ -72,17 +72,22 @@ class FeedController extends Controller
     public function userFeeds($id)
     {
         $user = User::find($id);
-        $feeds = Feed::with('likes')
-                     ->with('likers')
-                     ->with(array('user'=> function($query){ $query->select('name','username','id','photo'); }))
-                     ->with('files')
-                     ->with(array('comments'=> function($query){ $query->with(array('replies'=> function($query){ $query->with('replies'); })); }))
-                     ->select('id','user_id','postType','content','created_at')
-                     ->where('user_id', $id)
-                     ->latest()->get();
-        $followers = ($user->followers) ? $user->followers : 0;
-        $followings = ($user->followings) ? $user->followings : 0;
-        return response()->json(['data'=> $feeds,'followers'=>$followers, 'followings'=>$followings,'user'=>$user], 200);
+        if ($user) {
+            $feeds = Feed::with('likes')
+                         ->with('likers')
+                         ->with(array('user'=> function($query){ $query->select('name','username','id','photo'); }))
+                         ->with('files')
+                         ->with(array('comments'=> function($query){ $query->with(array('replies'=> function($query){ $query->with('replies'); })); }))
+                         ->select('id','user_id','postType','content','created_at')
+                         ->where('user_id', $id)
+                         ->latest()->get();
+            $followers = ($user->followers) ? $user->followers : [];
+            $followings = ($user->followings) ? $user->followings : [];
+            return response()->json(['data'=> $feeds,'followers'=>$followers, 'followings'=>$followings,'user'=>$user], 200);
+        }
+        else{
+            return response()->json(['data'=> 'User not found'], 404);
+        }
     }
 
     public function toggleLike(Request $request)
