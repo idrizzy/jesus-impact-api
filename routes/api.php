@@ -80,10 +80,10 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/user/followings', 'UserController@followings');
 
     // BAN & UNBAN USER
-    Route::post('/user/ban', 'UserController@banUser');
-    Route::post('/user/unban', 'UserController@unBanUser');
-    Route::get('/user/active', 'UserController@activeUsers');
-    Route::get('/user/inactive', 'UserController@inActiveUsers');
+    Route::post('/users/ban', 'UserController@banUser');
+    Route::post('/users/unban', 'UserController@unBanUser');
+    Route::get('/users/active', 'UserController@activeUsers');
+    Route::get('/users/inactive', 'UserController@inActiveUsers');
     Route::get('/users/all', 'UserController@allUsers');
 
 
