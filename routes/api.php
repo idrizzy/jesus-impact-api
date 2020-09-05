@@ -84,7 +84,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::post('/user/unban', 'UserController@unBanUser');
     Route::get('/user/active', 'UserController@activeUsers');
     Route::get('/user/inactive', 'UserController@inActiveUsers');
-    Route::get('/user/all', 'UserController@allUsers');
+    Route::get('/users/all', 'UserController@allUsers');
 
 
     //lIST USERS
