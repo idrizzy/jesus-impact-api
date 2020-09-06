@@ -90,13 +90,13 @@ Route::group(['middleware' => ['auth']], function() {
     //lIST USERS
     Route::get('/users/list', 'UserController@users');
     Route::post('/users/search', 'UserController@users');
-    
+
     // categories
     Route::get('/categories', 'CategoryController@index');
     Route::get('/categories/{id}', 'CategoryController@show');
     Route::post('/categories', 'CategoryController@create');
     Route::post('/categories/{id}/update', 'CategoryController@update');
-    Route::post('/categories/{id}/delete', 'CategoryController@destroy');
+    Route::get('/categories/{id}/delete', 'CategoryController@destroy');
 
     // tags
     Route::get('/tags', 'TagsController@index');

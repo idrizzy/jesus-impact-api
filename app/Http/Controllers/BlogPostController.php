@@ -15,7 +15,7 @@ class blogPostController extends Controller
      */
     public function index()
     {
-        $post = Blog_post::all();
+        $post = Blog_post::with('category')->with('blogComments')->get();
         return response()->json(['data'=>$post], 200);
     }
 
@@ -26,20 +26,20 @@ class blogPostController extends Controller
      */
     public function create(Request $request)
     {
-        
+
         $request->validate([
             'post_title' => 'required',
             'post_description' => 'required',
             'category_id' => 'required'
             ]);
 
-      
+
         $post_image = [];
        if($request->has('post_image')){
 
             $image = $request->file('post_image')->getClientOriginalName();
             $image_name = $request->file('post_image')->getRealPath();
-            Cloudder::upload($image_name, null, array("public_id"=>"users/".uniqid(),
+            Cloudder::upload($image_name, null, array("public_id"=>"blog/".uniqid(),
                             "width"=>600, "height"=>600, "crop"=>'scale', "fetch_format"=>'auto', "quality"=>"auto"));
 
             $image_url= Cloudder::secureShow(Cloudder::getResult()["secure_url"]);
@@ -50,7 +50,7 @@ class blogPostController extends Controller
             'post_title'=>$request->category_name,
             'post_description' => $request->description,
             'category_id' => 1,
-            ...$post_image
+            'post_image' => $post_image,
         ]);
 
         return response()->json(['message'=> 'Post Created Sucessfully'], 200);
@@ -90,7 +90,7 @@ class blogPostController extends Controller
     {
         $image = $request->file('post_image')->getClientOriginalName();
         $image_name = $request->file('post_image')->getRealPath();
-        Cloudder::upload($image_name, null, array("public_id"=>"users/".uniqid(),
+        Cloudder::upload($image_name, null, array("public_id"=>"blog/".uniqid(),
                         "width"=>600, "height"=>600, "crop"=>'scale', "fetch_format"=>'auto', "quality"=>"auto"));
 
         $image_url= Cloudder::secureShow(Cloudder::getResult()["secure_url"]);
@@ -108,7 +108,7 @@ class blogPostController extends Controller
      */
     public function update(Request $request, $id)
     {
-        
+
         $request->validate([
             'post_title' => 'required',
             'post_description' => 'required',
@@ -119,7 +119,7 @@ class blogPostController extends Controller
        if($request->has('post_image')){
             $image = $request->file('post_image')->getClientOriginalName();
             $image_name = $request->file('post_image')->getRealPath();
-            Cloudder::upload($image_name, null, array("public_id"=>"users/".uniqid(),
+            Cloudder::upload($image_name, null, array("public_id"=>"blog/".uniqid(),
                             "width"=>600, "height"=>600, "crop"=>'scale', "fetch_format"=>'auto', "quality"=>"auto"));
 
             $image_url= Cloudder::secureShow(Cloudder::getResult()["secure_url"]);
@@ -130,7 +130,7 @@ class blogPostController extends Controller
             'category_name'=>$request->category_name,
             'description' => $request->description,
             'category_id' => $request->category_id,
-            ...$post_image
+            'post_image' => $post_image,
         ]);
 
         return response()->json(['message'=> 'Post Updated Sucessfully'], 200);

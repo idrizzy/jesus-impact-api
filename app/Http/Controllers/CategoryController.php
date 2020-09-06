@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Category ;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Validator;
-
+use Auth;
 class CategoryController extends Controller
 {
     /**
@@ -15,8 +15,10 @@ class CategoryController extends Controller
      */
     public function index()
     {
+
         $category = Category::all();
         return response()->json(['data'=>$category], 200);
+
     }
 
     /**
@@ -26,17 +28,21 @@ class CategoryController extends Controller
      */
     public function create(Request $request)
     {
-        $request->validate([
-            'category_name' => 'required',
-            'description' => 'required'
-            ]);
-       
-        Category::create([
-            'category_name'=>$request->category_name,
-            'description' => $request->description
-        ]);
+        $user = Auth::user();
+        if($user->roles[0]->name == 'SuperAdmin'){
+            $request->validate([
+                'category_name' => 'required',
+                'description' => 'required'
+                ]);
 
-        return response()->json(['message'=> 'Category Created Sucessfully'], 200);
+            Category::create([
+                'category_name'=>$request->category_name,
+                'description' => $request->description
+            ]);
+
+            return response()->json(['message'=> 'Category Created Sucessfully'], 200);
+        }
+        return response()->json(['message'=>'User Does not have permissions to perfrom this operation'], 403);
     }
 
     /**
@@ -58,7 +64,7 @@ class CategoryController extends Controller
      */
     public function show($id)
     {
-        $cat = Category::find($id);
+        $cat = Category::with('blogs')->where('id',$id)->get();
         return response()->json(['data'=> $cat], 200);
     }
 
@@ -82,19 +88,22 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $user = Auth::user();
+        if($user->roles[0]->name == 'SuperAdmin'){
+            $request->validate([
+                'category_name' => 'required',
+                'description' => 'required'
+                ]);
 
-        $request->validate([
-            'category_name' => 'required',
-            'description' => 'required'
+            $category = Category::find($id);
+            $category->update([
+                'category_name'=>$request->category_name,
+                'description'=>$request->description,
             ]);
 
-        $category = Category::find($id);
-        $category->update([
-            'category_name'=>$request->category_name,
-            'description'=>$request->description,
-        ]);
-        
-        return response()->json(['message'=> 'Category Updated Sucessfully'], 200);
+            return response()->json(['message'=> 'Category Updated Sucessfully'], 200);
+        }
+        return response()->json(['message'=>'User Does not have permissions to perfrom this operation'], 403);
     }
 
     /**
@@ -105,8 +114,12 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        $category = Category::find($id);
-        $category->delete();
-        return response()->json(['message'=> 'Category deleted Sucessfully'], 200);
+        $user = Auth::user();
+        if($user->roles[0]->name == 'SuperAdmin'){
+            $category = Category::find($id);
+            $category->delete();
+            return response()->json(['message'=> 'Category deleted Sucessfully'], 200);
+        }
+        return response()->json(['message'=>'User Does not have permissions to perfrom this operation'], 403);
     }
 }
