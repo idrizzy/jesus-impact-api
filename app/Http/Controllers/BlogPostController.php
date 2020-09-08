@@ -16,7 +16,7 @@ class blogPostController extends Controller
      */
     public function index()
     {
-        $post = Blog_post::with('category')->with('blogComments')->get();
+        $post = Blog_post::with('blogComments')->get();
         return response()->json(['data'=>$post], 200);
     }
 
