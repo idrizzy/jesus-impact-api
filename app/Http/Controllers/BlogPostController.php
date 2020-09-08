@@ -27,13 +27,16 @@ class blogPostController extends Controller
     public function create(Request $request)
     {
 
-        $request->validate([
+
+        $validate  = Validator::make($request->all(), [
             'post_title' => 'required',
             'post_description' => 'required',
             'category_id' => 'required'
-            ]);
+        ]);
 
-
+        if($validate->fails()){
+            return response()->json(['message' => $validate->messages()->first()], 400);
+        }
         $post_image = [];
        if($request->has('post_image')){
 
