@@ -50,8 +50,8 @@ class blogPostController extends Controller
 
        }
         Blog_post::create([
-            'post_title'=>$request->category_name,
-            'post_description' => $request->description,
+            'post_title'=>$request->post_title,
+            'post_description' => $request->post_description,
             'category_id' => 1,
             'post_image' => $image_url,
         ]);
