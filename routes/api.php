@@ -110,7 +110,7 @@ Route::group(['middleware' => ['auth']], function() {
     // tags
     Route::get('/blogPost', 'BlogPostController@index');
     Route::get('/blogPost/{id}', 'BlogPostController@show');
-    Route::post('/blogPost', 'BlogPostController@create');
+    Route::post('/blogpost', 'BlogPostController@create');
     Route::post('/blogPost/{id}/update', 'BlogPostController@update');
     Route::post('/blogPost/{id}/delete', 'BlogPostController@destroy');
 
