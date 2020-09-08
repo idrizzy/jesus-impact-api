@@ -60,16 +60,6 @@ class blogPostController extends Controller
 
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
 
     /**
      * Display the specified resource.
@@ -111,31 +101,34 @@ class blogPostController extends Controller
      */
     public function update(Request $request, $id)
     {
-
-        $request->validate([
+        $validate  = Validator::make($request->all(), [
             'post_title' => 'required',
             'post_description' => 'required',
-            'category_id' => 'required',
-            ]);
+            'category_id' => 'required'
+        ]);
 
-        $post_image = [];
+        if($validate->fails()){
+            return response()->json(['message' => $validate->messages()->first()], 400);
+        }
+        $Blog_post =  Blog_post::find($id);
+        $image_url = $Blog_post->post_image;
+
        if($request->has('post_image')){
+
             $image = $request->file('post_image')->getClientOriginalName();
             $image_name = $request->file('post_image')->getRealPath();
             Cloudder::upload($image_name, null, array("public_id"=>"blog/".uniqid(),
                             "width"=>600, "height"=>600, "crop"=>'scale', "fetch_format"=>'auto', "quality"=>"auto"));
 
             $image_url= Cloudder::secureShow(Cloudder::getResult()["secure_url"]);
-            $post_image = ['post_image' => $image_url];
-       }
-       $Blog_post =  Blog_post::find($id);
-       $Blog_post->update([
-            'category_name'=>$request->category_name,
-            'description' => $request->description,
-            'category_id' => $request->category_id,
-            'post_image' => $post_image,
-        ]);
 
+       }
+       $Blog_post->update([
+            'post_title'=>$request->post_title,
+            'post_description' => $request->post_description,
+            'category_id' => 1,
+            'post_image' => $image_url,
+        ]);
         return response()->json(['message'=> 'Post Updated Sucessfully'], 200);
     }
 
