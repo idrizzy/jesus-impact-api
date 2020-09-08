@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Blog_post;
 use Cloudder;
 use Illuminate\Http\Request;
+use Validator;
 
 class blogPostController extends Controller
 {
