@@ -10,7 +10,7 @@ class Blog_post extends Model
         'post_title', 'post_description', 'post_image', 'category_id'
     ];
 
-    public function category(){
+    public function categories(){
         return $this->belongsToMany(Category::class);
     }
 
