@@ -38,7 +38,7 @@ class blogPostController extends Controller
         if($validate->fails()){
             return response()->json(['message' => $validate->messages()->first()], 400);
         }
-        $post_image = [];
+        $image_url = '';
        if($request->has('post_image')){
 
             $image = $request->file('post_image')->getClientOriginalName();
@@ -48,13 +48,12 @@ class blogPostController extends Controller
 
             $image_url= Cloudder::secureShow(Cloudder::getResult()["secure_url"]);
 
-            $post_image = ['post_image' => $image_url];
        }
         Blog_post::create([
             'post_title'=>$request->category_name,
             'post_description' => $request->description,
             'category_id' => 1,
-            'post_image' => $post_image,
+            'post_image' => $image_url,
         ]);
 
         return response()->json(['message'=> 'Post Created Sucessfully'], 200);
