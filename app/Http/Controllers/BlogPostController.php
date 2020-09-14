@@ -70,7 +70,7 @@ class blogPostController extends Controller
     public function show($id)
     {
         $Blog_post = Blog_post::find($id);
-        return response()->json(['data'=>$id], 200);
+        return response()->json(['data'=>$Blog_post], 200);
     }
 
     /**
