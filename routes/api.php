@@ -74,10 +74,10 @@ Route::group(['middleware' => ['auth']], function() {
     Route::post('/feed/unlike', 'FeedController@toggleLike');
 
     //FOLLOW AND UNFOLLOW
-    Route::post('/user/follow', 'UserController@toggleFollow');
-    Route::post('/user/unfollow', 'UserController@toggleFollow');
-    Route::get('/user/followers', 'UserController@followers');
-    Route::get('/user/followings', 'UserController@followings');
+    Route::post('/users/follow', 'UserController@toggleFollow');
+    Route::post('/users/unfollow', 'UserController@toggleFollow');
+    Route::get('/users/followers', 'UserController@followers');
+    Route::get('/users/followings', 'UserController@followings');
 
     // BAN & UNBAN USER
     Route::post('/users/ban', 'UserController@banUser');
