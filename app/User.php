@@ -26,6 +26,12 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany('App\Models\Feed');
     }
+
+    public function communities()
+    {
+        return $this->belongsToMany('App\Models\Community', 'community_user', 'user_id', 'community_id');
+    }
+
     /**
      * The attributes that should be hidden for arrays.
      *

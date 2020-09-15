@@ -103,14 +103,17 @@ class FeedController extends Controller
         // return response()->json(['message' => $request->all()], 200);
         $validate  = Validator::make($request->all(), [
             'postType' => ['required', 'string'],
+            'feedType' => ['required', 'string'],
         ]);
 
         if($validate->fails()){
             return response()->json(['message' => $validate->messages()->first()], 400);
         }
-        $data = $request->only(['content','postType']);
+        $data = $request->only(['content','postType','feedType']);
         $data['user_id'] = Auth::id();
-
+        if ($request->feedType != 'personal') {
+            $data['community_id'] = $request->community_id 
+        }
         $feed = new Feed($data);
         $save = $feed->save();
         if ($save) {

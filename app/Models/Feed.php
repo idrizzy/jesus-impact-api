@@ -7,7 +7,7 @@ use Overtrue\LaravelLike\Traits\Likeable;
 class Feed extends Model
 {
     use Likeable;
-    protected $fillable = ['user_id','content','postType','status'];
+    protected $fillable = ['user_id','content','postType','status','feedType','community_id'];
 
     public function user()
     {

@@ -40,7 +40,7 @@ class CategoryController extends Controller
                 'description' => $request->description
             ]);
 
-            return response()->json(['message'=> 'Category Created Sucessfully'], 200);
+            return response()->json(['message'=> 'Category Created Sucessfully'], 201);
         }
         return response()->json(['message'=>'User Does not have permissions to perfrom this operation'], 403);
     }

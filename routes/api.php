@@ -114,6 +114,13 @@ Route::group(['middleware' => ['auth']], function() {
     Route::post('/blogPost/{id}/update', 'BlogPostController@update');
     Route::post('/blogPost/{id}/delete', 'BlogPostController@destroy');
 
+    // Community
+    Route::post('/community/add', 'CommunityController@store');
+    Route::get('/community/all', 'CommunityController@index');
+    Route::get('/usercommunities', 'CommunityController@userCommunities');
+    Route::post('/community/search', 'CommunityController@search');
+    Route::get('/community/member/{id}', 'CommunityController@communityMember');
+    Route::get('/community/feeds/{id}', 'CommunityController@communityFeed');
 
     // Logout Route for the Application
     Route::get('/logout', 'UserController@logout');
