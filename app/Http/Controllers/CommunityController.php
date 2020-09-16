@@ -26,6 +26,15 @@ class CommunityController extends Controller
     //     return response()->json([ "data" => 'Community not found' ], 404);
     // }
     
+    public function unjoinCommunity($id)
+    {
+        $userid = Auth::id(); 
+        $community = Community::where('id',$id)->first();
+        $joined = $community->users()->detach($userid);
+        return response()->json([ "message" => 'User left the Community Successfully' ], 200);
+        
+    }
+   
     public function joinCommunity($id)
     {
         $userid = Auth::id(); 
