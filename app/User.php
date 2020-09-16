@@ -29,7 +29,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function communities()
     {
-        return $this->belongsToMany('App\Models\Community', 'community_user', 'user_id', 'community_id');
+        return $this->belongsToMany('App\Models\Community', 'community_user', 'user_id', 'community_id')->withPivot('status');
     }
 
     /**

@@ -11,21 +11,47 @@ use App\Models\Feed;
 use Auth;
 class CommunityController extends Controller
 {
-    //
+    // public function communityDetails($id)
+    // {
+    //     $userid = Auth::id();
+    //     $userCommunities = User::with(array('communities'=> function($query)use($id){ 
+    //                             $query->with('users')
+                                
+    //                             ->where('id',$id);
+    //                         }))->where('id', $userid)->first();
+    //     if (count($userCommunities->communities) > 0 ) {
+    //         $userCommunitiesDetails = $userCommunities->communities[0];
+    //         return response()->json([ "data" => $userCommunitiesDetails ], 200);
+    //     }
+    //     return response()->json([ "data" => 'Community not found' ], 404);
+    // }
+    
+    public function joinCommunity($id)
+    {
+        $userid = Auth::id(); 
+        $community = Community::where('id',$id)->first();
+        if ($community->category == 'closed') {
+            $joined = $community->users()->attach($userid, ['status'=>'pending']);
+        }
+        else{
+
+            $joined = $community->users()->attach($userid);
+        }
+        return response()->json([ "message" => 'Community Joined Successfully' ], 200);
+        
+    }
 
     public function communityFeed($id)
     {
-        $communityFeeds = Community::with(array('feeds'=> function($query,$id){ 
-                                    $query->with('likes')
-                                    ->with('likers')
-                                    ->with(array('user'=> function($query){ $query->select('name','username','id','photo'); }))
-                                    ->with('files')
-                                    ->with(array('comments'=> function($query){ $query->with(array('replies'=> function($query){ $query->with('replies'); })); }))
-                                    ->select('id','user_id','postType','content','created_at')
-                                    ->where('community_id',$id); 
-                                            }
-                                        )
-                                    );
+        $communityFeeds = Community::with(array('feeds'=> function($query){ 
+            $query->with('likes')
+            ->with('likers')
+            ->with(array('user'=> function($query){ $query->select('name','username','id','photo'); }))
+            ->with('files')
+            ->with(array('comments'=> function($query){ $query->with(array('replies'=> function($query){ $query->with('replies'); })); })); 
+                }
+            )
+        )->where('id',$id)->first();
         return response()->json([ "data" => $communityFeeds ], 200);
     }
     
@@ -35,10 +61,11 @@ class CommunityController extends Controller
         return response()->json([ "data" => $communityMember ], 200);
     }
     
+    
     public function userCommunities()
     {
         $userid = Auth::id();
-        $userCommunities = User::with('communities')->where('id', $userid)->get();
+        $userCommunities = User::with('communities')->where('id', $userid)->first();
         return response()->json([ "data" => $userCommunities ], 200);
     }
 

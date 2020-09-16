@@ -31,7 +31,7 @@ class CreateCommunitiesTable extends Migration
         Schema::create('community_user', function (Blueprint $table) {
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('community_id');
-            $table->enum('status', ['pending', 'active'])->nullable()->default('pending');
+            $table->enum('status', ['pending', 'active'])->nullable()->default('active');
             $table->foreign('community_id')->references('id')->on('communities')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
