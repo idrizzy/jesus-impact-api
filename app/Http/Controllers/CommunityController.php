@@ -9,22 +9,17 @@ use Cloudder;
 use App\User;
 use App\Models\Feed;
 use Auth;
+use DB;
 class CommunityController extends Controller
 {
-    // public function communityDetails($id)
-    // {
-    //     $userid = Auth::id();
-    //     $userCommunities = User::with(array('communities'=> function($query)use($id){
-    //                             $query->with('users')
-
-    //                             ->where('id',$id);
-    //                         }))->where('id', $userid)->first();
-    //     if (count($userCommunities->communities) > 0 ) {
-    //         $userCommunitiesDetails = $userCommunities->communities[0];
-    //         return response()->json([ "data" => $userCommunitiesDetails ], 200);
-    //     }
-    //     return response()->json([ "data" => 'Community not found' ], 404);
-    // }
+    public function communityDetails($id)
+    {
+        $userid = Auth::id();
+        $userCommunities = Community::where('id', $id)->first();
+        $checkJoinStatus = DB::table('community_user')->where('community_id', $id)->where('user_id', $userid)->first();
+        $joinStatus = (($checkJoinStatus)) ? true : false;
+        return response()->json([ "data" =>$userCommunities, "joinStatus" => $joinStatus  ], 200);
+    }
 
 
 

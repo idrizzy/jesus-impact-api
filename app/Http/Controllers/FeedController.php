@@ -81,7 +81,9 @@ class FeedController extends Controller
                          ->latest()->get();
             $followers = ($user->followers) ? $user->followers : [];
             $followings = ($user->followings) ? $user->followings : [];
-            return response()->json(['data'=> $feeds,'followers'=>$followers, 'followings'=>$followings,'user'=>$user], 200);
+            $currentUser = Auth::user();
+            $isFollowed = $user->isFollowedBy($currentUser);
+            return response()->json(['data'=> $feeds,'followers'=>$followers, 'followings'=>$followings,'user'=>$user,'followStatus'=> $isFollowed], 200);
         }
         else{
             return response()->json(['data'=> 'User not found'], 404);

@@ -124,7 +124,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/community/join/{id}', 'CommunityController@joinCommunity');
     Route::get('/community/unjoin/{id}', 'CommunityController@unjoinCommunity');
     Route::get('/community/approveCommunityUser', 'CommunityController@approveCommunityUser');
-    // Route::get('/community/details/{id}', 'CommunityController@communityDetails');
+    Route::get('/community/details/{id}', 'CommunityController@communityDetails');
 
     // Logout Route for the Application
     Route::get('/logout', 'UserController@logout');
