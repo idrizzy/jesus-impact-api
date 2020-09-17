@@ -14,9 +14,9 @@ class CommunityController extends Controller
     // public function communityDetails($id)
     // {
     //     $userid = Auth::id();
-    //     $userCommunities = User::with(array('communities'=> function($query)use($id){ 
+    //     $userCommunities = User::with(array('communities'=> function($query)use($id){
     //                             $query->with('users')
-                                
+
     //                             ->where('id',$id);
     //                         }))->where('id', $userid)->first();
     //     if (count($userCommunities->communities) > 0 ) {
@@ -25,19 +25,26 @@ class CommunityController extends Controller
     //     }
     //     return response()->json([ "data" => 'Community not found' ], 404);
     // }
-    
+
+
+
     public function unjoinCommunity($id)
     {
-        $userid = Auth::id(); 
+        $userid = Auth::id();
         $community = Community::where('id',$id)->first();
         $joined = $community->users()->detach($userid);
         return response()->json([ "message" => 'User left the Community Successfully' ], 200);
-        
+
     }
-   
+
     public function joinCommunity($id)
     {
-        $userid = Auth::id(); 
+        $userid = Auth::id();
+        $checkExist = Community::where('id',$id)->where('user_id', $userid)->first();
+        if($checkExist){
+            return response()->json([ "message" => 'Already a member of this community' ], 200);
+
+        }
         $community = Community::where('id',$id)->first();
         if ($community->category == 'closed') {
             $joined = $community->users()->attach($userid, ['status'=>'pending']);
@@ -47,30 +54,30 @@ class CommunityController extends Controller
             $joined = $community->users()->attach($userid);
         }
         return response()->json([ "message" => 'Community Joined Successfully' ], 200);
-        
+
     }
 
     public function communityFeed($id)
     {
-        $communityFeeds = Community::with(array('feeds'=> function($query){ 
+        $communityFeeds = Community::with(array('feeds'=> function($query){
             $query->with('likes')
             ->with('likers')
             ->with(array('user'=> function($query){ $query->select('name','username','id','photo'); }))
             ->with('files')
-            ->with(array('comments'=> function($query){ $query->with(array('replies'=> function($query){ $query->with('replies'); })); })); 
+            ->with(array('comments'=> function($query){ $query->with(array('replies'=> function($query){ $query->with('replies'); })); }));
                 }
             )
         )->where('id',$id)->first();
         return response()->json([ "data" => $communityFeeds ], 200);
     }
-    
+
     public function communityMember($id)
     {
         $communityMember = Community::with('users')->where('id', $id)->get();
         return response()->json([ "data" => $communityMember ], 200);
     }
-    
-    
+
+
     public function userCommunities()
     {
         $userid = Auth::id();
@@ -91,6 +98,17 @@ class CommunityController extends Controller
     {
         $communities = Community::all();
         return response()->json([ "data" => $communities ], 200);
+    }
+
+    public function approveCommunityUser(Request $request)
+    {
+        $user = Auth::user();
+        if($user->roles[0]->name == 'SuperAdmin'){
+
+            Community::where('community_id', $request->community_id)->where('user_id',$request->user_id)->update(['status'=>'active']);
+            return response()->json([ "message" => "Approved Successfully" ], 200);
+        }
+        return response()->json(['message'=>'User Does not have permissions to perfrom this operation'], 401);
     }
 
     public function store(Request $request)

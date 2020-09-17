@@ -13,8 +13,11 @@ use Illuminate\Support\Facades\App;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use App\Http\Traits\NewNotificationTrait;
+
 class UserController extends Controller
 {
+    use NewNotificationTrait;
     public function logout()
     {
         $this->guard()->logout();
@@ -137,6 +140,38 @@ class UserController extends Controller
         $user = User::find($request->user_id);
         $currentUser = User::find(Auth::id());
         $currentUser->toggleFollow($user);
+        return response()->json(['message'=> 'ok'],200);
+    }
+
+    public function follow(Request $request)
+    {
+        $user = User::find($request->user_id);
+        $currentUser = User::find(Auth::id());
+        $currentUser->follow($user);
+
+        $userid = Auth::id();
+        $receiver_id = $request->user_id;
+        $action_id = $userid;
+        $content = $currentUser->username.' followed you';
+        $type = 'follow';
+        $notificationTime = date('h:i a');
+        $this->saveNotification($userid, $receiver_id, $action_id, $content, $notificationTime, $type);
+        return response()->json(['message'=> 'ok'],200);
+    }
+
+    public function unFollow(Request $request)
+    {
+        $user = User::find($request->user_id);
+        $currentUser = User::find(Auth::id());
+        $currentUser->unfollow($user);
+        
+        $userid = Auth::id();
+        $receiver_id = $request->user_id;
+        $action_id = $userid;
+        $content = $currentUser->username.' un-followed you';
+        $type = 'follow';
+        $notificationTime = date('h:i a');
+        $this->saveNotification($userid, $receiver_id, $action_id, $content, $notificationTime, $type);
         return response()->json(['message'=> 'ok'],200);
     }
 

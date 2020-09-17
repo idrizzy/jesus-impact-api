@@ -9,14 +9,12 @@ use Illuminate\Http\Request;
 use Validator;
 use Auth;
 use Cloudder;
+use App\Http\Traits\NewNotificationTrait;
 
 class FeedController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    use NewNotificationTrait;
+
     public function show($id)
     {
         $user = User::find(Auth::id());
@@ -95,6 +93,29 @@ class FeedController extends Controller
         $user = User::find($request->user_id);
         $feed = Feed::find($request->feed_id);
         $user->toggleLike($feed);
+        return response()->json(['message'=> 'ok'],200);
+    }
+    public function like(Request $request)
+    {
+        $user = User::find($request->user_id);
+        $feed = Feed::find($request->feed_id);
+        $user->like($feed);
+        if ($request->user_id != $feed->user_id) {
+            $userid = Auth::id();
+            $receiver_id = $feed->user_id;
+            $action_id = $request->feed_id;
+            $content = $user->username.' liked your post';
+            $type = 'post';
+            $notificationTime = date('h:i a');
+            $this->saveNotification($userid, $receiver_id, $action_id, $content, $notificationTime, $type);
+        }
+        return response()->json(['message'=> 'ok'],200);
+    }
+    public function unLike(Request $request)
+    {
+        $user = User::find($request->user_id);
+        $feed = Feed::find($request->feed_id);
+        $user->unlike($feed);
         return response()->json(['message'=> 'ok'],200);
     }
 

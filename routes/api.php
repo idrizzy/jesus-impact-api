@@ -70,12 +70,12 @@ Route::group(['middleware' => ['auth']], function() {
     Route::post('/feed/reply', 'CommentController@replyStore');
 
     //feed like and dislike
-    Route::post('/feed/like', 'FeedController@toggleLike');
-    Route::post('/feed/unlike', 'FeedController@toggleLike');
+    Route::post('/feed/like', 'FeedController@like');
+    Route::post('/feed/unlike', 'FeedController@unLike');
 
     //FOLLOW AND UNFOLLOW
-    Route::post('/users/follow', 'UserController@toggleFollow');
-    Route::post('/users/unfollow', 'UserController@toggleFollow');
+    Route::post('/users/follow', 'UserController@follow');
+    Route::post('/users/unfollow', 'UserController@unFollow');
     Route::get('/users/followers', 'UserController@followers');
     Route::get('/users/followings', 'UserController@followings');
 
@@ -123,8 +123,11 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/community/feeds/{id}', 'CommunityController@communityFeed');
     Route::get('/community/join/{id}', 'CommunityController@joinCommunity');
     Route::get('/community/unjoin/{id}', 'CommunityController@unjoinCommunity');
+    Route::get('/community/approveCommunityUser', 'CommunityController@approveCommunityUser');
     // Route::get('/community/details/{id}', 'CommunityController@communityDetails');
 
     // Logout Route for the Application
     Route::get('/logout', 'UserController@logout');
+    Route::get('/today/notifications', 'NotificationController@today');
+    Route::get('/yesterday/notifications', 'NotificationController@yesterday');
 });
