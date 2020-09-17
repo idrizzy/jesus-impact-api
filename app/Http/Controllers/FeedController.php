@@ -112,7 +112,7 @@ class FeedController extends Controller
         $data = $request->only(['content','postType','feedType']);
         $data['user_id'] = Auth::id();
         if ($request->feedType != 'personal') {
-            $data['community_id'] = $request->community_id 
+            $data['community_id'] = $request->community_id;
         }
         $feed = new Feed($data);
         $save = $feed->save();
