@@ -130,4 +130,8 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/logout', 'UserController@logout');
     Route::get('/today/notifications', 'NotificationController@today');
     Route::get('/yesterday/notifications', 'NotificationController@yesterday');
+
+    Route::get('/contacts', 'MessageController@get');
+    Route::get('/conversation/{id}', 'MessageController@getMessagesFor');
+    Route::post('/conversation/send', 'MessageController@send');
 });
