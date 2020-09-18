@@ -28,10 +28,16 @@ $factory->define(User::class, function (Faker $faker) {
 });
 
 $factory->define(App\Models\Message::class, function (Faker $faker) {
-    do {
-        $from = rand(2, 6);
-        $to = rand(2, 6);
-    } while ($from === $to);
+    $min = 1;
+    $max = 61;
+    
+    $result = mt_rand(ceil($min/10) , floor($max/10))*10 + 1;
+    $result1 = mt_rand(ceil($min/10) , floor($max/10))*10 + 1;
+    
+     do {
+            $from = $result;
+            $to = $result1;
+        } while ($from === $to);
 
     return [
         'from' => $from,
