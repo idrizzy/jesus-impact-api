@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Notification;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Auth;
 class NotificationController extends Controller
 {
 
