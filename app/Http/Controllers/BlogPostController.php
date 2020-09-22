@@ -44,7 +44,7 @@ class blogPostController extends Controller
             $image = $request->file('post_image')->getClientOriginalName();
             $image_name = $request->file('post_image')->getRealPath();
             Cloudder::upload($image_name, null, array("public_id"=>"blog/".uniqid(),
-                            "width"=>600, "height"=>600, "crop"=>'scale', "fetch_format"=>'auto', "quality"=>"auto"));
+                            "width"=>600, "height"=>600, "crop"=>"imagga_scale","sign_url" => true, "fetch_format"=>'auto', "quality"=>"auto"));
 
             $image_url= Cloudder::secureShow(Cloudder::getResult()["secure_url"]);
 
@@ -84,7 +84,7 @@ class blogPostController extends Controller
         $image = $request->file('post_image')->getClientOriginalName();
         $image_name = $request->file('post_image')->getRealPath();
         Cloudder::upload($image_name, null, array("public_id"=>"blog/".uniqid(),
-                        "width"=>600, "height"=>600, "crop"=>'scale', "fetch_format"=>'auto', "quality"=>"auto"));
+                        "width"=>600, "height"=>600, "crop"=>"imagga_scale","sign_url" => true, "fetch_format"=>'auto', "quality"=>"auto"));
 
         $image_url= Cloudder::secureShow(Cloudder::getResult()["secure_url"]);
         $post_image = ['post_image' => $image_url];
@@ -118,7 +118,7 @@ class blogPostController extends Controller
             $image = $request->file('post_image')->getClientOriginalName();
             $image_name = $request->file('post_image')->getRealPath();
             Cloudder::upload($image_name, null, array("public_id"=>"blog/".uniqid(),
-                            "width"=>600, "height"=>600, "crop"=>'scale', "fetch_format"=>'auto', "quality"=>"auto"));
+                            "width"=>600, "height"=>600, "crop"=>"imagga_scale","sign_url" => true, "fetch_format"=>'auto', "quality"=>"auto"));
 
             $image_url= Cloudder::secureShow(Cloudder::getResult()["secure_url"]);
 
