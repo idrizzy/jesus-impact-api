@@ -35,7 +35,7 @@ class CommunityController extends Controller
     public function joinCommunity($id)
     {
         $userid = Auth::id();
-        $checkExist = Community::where('id',$id)->where('user_id', $userid)->first();
+        $checkExist = DB::table('community_user')->where('community_id',$id)->where('user_id', $userid)->first();
         if($checkExist){
             return response()->json([ "message" => 'Already a member of this community' ], 200);
 
