@@ -39,7 +39,7 @@ class CommunityController extends Controller
         if($checkExist){
             return response()->json([ "message" => 'Already a member of this community' ], 200);
 
-        }
+        }   
         $community = Community::where('id',$id)->first();
         if ($community->category == 'closed') {
             $joined = $community->users()->attach($userid, ['status'=>'pending']);
