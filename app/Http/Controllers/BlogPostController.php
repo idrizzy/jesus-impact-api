@@ -126,7 +126,7 @@ class blogPostController extends Controller
        $Blog_post->update([
             'post_title'=>$request->post_title,
             'post_description' => $request->post_description,
-            'category_id' => 1,
+            'category_id' => $request->category_id,
             'post_image' => $image_url,
         ]);
         return response()->json(['message'=> 'Post Updated Sucessfully'], 200);
