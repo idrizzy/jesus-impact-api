@@ -21,8 +21,6 @@ class CommunityController extends Controller
         return response()->json([ "data" =>$userCommunities, "joinStatus" => $joinStatus  ], 200);
     }
 
-
-
     public function unjoinCommunity($id)
     {
         $userid = Auth::id();
@@ -39,7 +37,7 @@ class CommunityController extends Controller
         if($checkExist){
             return response()->json([ "message" => 'Already a member of this community' ], 200);
 
-        }   
+        }
         $community = Community::where('id',$id)->first();
         if ($community->category == 'closed') {
             $joined = $community->users()->attach($userid, ['status'=>'pending']);
@@ -100,8 +98,19 @@ class CommunityController extends Controller
         $user = Auth::user();
         if($user->roles[0]->name == 'SuperAdmin'){
 
-            Community::where('community_id', $request->community_id)->where('user_id',$request->user_id)->update(['status'=>'active']);
+            DB::table('community_user')->where('community_id', $request->community_id)->where('user_id',$request->user_id)->update(['status'=>'active']);
             return response()->json([ "message" => "Approved Successfully" ], 200);
+        }
+        return response()->json(['message'=>'User Does not have permissions to perfrom this operation'], 401);
+    }
+
+    public function communityDelete($community_id)
+    {
+        $user = Auth::user();
+        if($user->roles[0]->name == 'SuperAdmin'){
+
+            Community::where('id', $community_id)->delete();
+            return response()->json([ "message" => "Community Deleted Successfully" ], 200);
         }
         return response()->json(['message'=>'User Does not have permissions to perfrom this operation'], 401);
     }
