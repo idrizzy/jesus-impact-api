@@ -181,13 +181,7 @@ class FeedController extends Controller
                             $videos[] = $p;
                             $upload = Cloudder::uploadVideo($p, null,array(
                                 "resource_type" => "video",
-                                "public_id" => "feed/".uniqid(),
-                                "chunk_size" => 6000000,
-                                "eager" => array(
-                                array("width" => 300, "height" => 300, "crop" => "pad", "audio_codec" => "none"),
-                                array("width" => 160, "height" => 100, "crop" => "crop", "gravity" => "south", "audio_codec" => "none")
-                                ),
-                                "eager_async" => TRUE)
+                                "public_id" => "feed/".uniqid())
                             );
                             if (!$upload) {
                                 return response()->json(['message'=>'Unable to upload file!!! Check  and try again'], 400);
