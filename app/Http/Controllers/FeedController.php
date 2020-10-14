@@ -179,7 +179,7 @@ class FeedController extends Controller
                         $video_urls = [];
                         foreach ($video as $p) {
                             $videos[] = $p;
-                            $upload = Cloudder::upload($p, null,array(
+                            $upload = Cloudder::uploadVideo($p, null,array(
                                 "resource_type" => "video",
                                 "public_id" => "feed/".uniqid(),
                                 "chunk_size" => 6000000,
