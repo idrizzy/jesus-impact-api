@@ -135,4 +135,5 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/contacts', 'MessageController@get');
     Route::get('/conversation/{id}', 'MessageController@getMessagesFor');
     Route::post('/conversation/send', 'MessageController@send');
+    Route::post('/add/device', 'DeviceController@store');
 });
