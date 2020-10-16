@@ -10,6 +10,7 @@ use Validator;
 use Auth;
 use Cloudder;
 use App\Http\Traits\NewNotificationTrait;
+use App\Models\Device;
 
 class FeedController extends Controller
 {
@@ -110,8 +111,10 @@ class FeedController extends Controller
             $type = 'post';
             $notificationTime = date('h:i a');
             $this->saveNotification($userid, $receiver_id, $action_id, $content, $notificationTime, $type);
+            $device = Device::where('user_id',$receiver_id)->first()->device;
+            return response()->json(['message'=> 'ok', 'device' => $device, 'content' => $content],200);
         }
-        return response()->json(['message'=> 'ok'],200);
+        return response()->json(['message'=> 'ok', ],200);
     }
     public function unLike(Request $request)
     {
@@ -181,7 +184,13 @@ class FeedController extends Controller
                             $videos[] = $p;
                             $upload = Cloudder::uploadVideo($p, null,array(
                                 "resource_type" => "video",
-                                "public_id" => "feed/".uniqid())
+                                "public_id" => "feed/".uniqid(),
+                                "chunk_size" => 6000000,
+                                "eager" => array(
+                                array("width" => 300, "height" => 300, "crop" => "pad", "audio_codec" => "none"),
+                                array("width" => 160, "height" => 100, "crop" => "crop", "gravity" => "south", "audio_codec" => "none")
+                                ),
+                                "eager_async" => TRUE)
                             );
                             if (!$upload) {
                                 return response()->json(['message'=>'Unable to upload file!!! Check  and try again'], 400);

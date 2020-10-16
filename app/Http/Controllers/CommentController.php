@@ -7,7 +7,7 @@ use App\Models\Comment;
 use App\Models\Feed;
 use Auth;
 use App\Http\Traits\NewNotificationTrait;
-
+use App\Models\Device;
 class CommentController extends Controller
 {
     use NewNotificationTrait;
@@ -31,6 +31,9 @@ class CommentController extends Controller
             $type = 'post';
             $notificationTime = date('h:i a');
             $this->saveNotification($userid, $receiver_id, $action_id, $content, $notificationTime, $type);
+            $device = Device::where('user_id',$receiver_id)->first()->device;
+            return response()->json(['message'=> 'ok', 'device' => $device, 'content' => $content],200);
+
         }
 
     }
@@ -58,6 +61,9 @@ class CommentController extends Controller
             $type = 'post';
             $notificationTime = date('h:i a');
             $this->saveNotification($userid, $receiver_id, $action_id, $content, $notificationTime, $type);
+            $device = Device::where('user_id',$receiver_id)->first()->device;
+            return response()->json(['message'=> 'ok', 'device' => $device, 'content' => $content],200);
+
         }
 
     }

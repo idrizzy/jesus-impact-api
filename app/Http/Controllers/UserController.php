@@ -14,6 +14,7 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use App\Http\Traits\NewNotificationTrait;
+use App\Models\Device;
 
 class UserController extends Controller
 {
@@ -58,8 +59,13 @@ class UserController extends Controller
             'password' => Hash::make($request->get('password')),
             'username'=>$request->get('username')
         ]);
+        Device::create([
+            'user_id' => $user->id,
+            'device' => $request->get('device'),
+            'device_type' => ($request->get('device_type'))? $request->get('device_type') : 'mobile'
+        ]);
         $user->assignRole('Users');
-
+        
         return response()->json(["message"=>"Account Created Successfully"],201);
     }
 
@@ -152,11 +158,12 @@ class UserController extends Controller
         $userid = Auth::id();
         $receiver_id = $request->user_id;
         $action_id = $userid;
-        $content = $currentUser->username.' followed you';
+        $content = $currentUser->username.' follows you';
         $type = 'follow';
         $notificationTime = date('h:i a');
         $this->saveNotification($userid, $receiver_id, $action_id, $content, $notificationTime, $type);
-        return response()->json(['message'=> 'ok'],200);
+        $device = Device::where('user_id',$receiver_id)->first()->device;
+        return response()->json(['message'=> 'ok', 'device' => $device, 'content' => $content],200);
     }
 
     public function unFollow(Request $request)
@@ -172,7 +179,8 @@ class UserController extends Controller
         $type = 'follow';
         $notificationTime = date('h:i a');
         $this->saveNotification($userid, $receiver_id, $action_id, $content, $notificationTime, $type);
-        return response()->json(['message'=> 'ok'],200);
+        $device = Device::where('user_id',$receiver_id)->first()->device;
+        return response()->json(['message'=> 'ok', 'device' => $device, 'content' => $content],200);
     }
 
     public function users(Request $request)
