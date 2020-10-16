@@ -8,9 +8,10 @@ use Auth;
 use Validator;
 class DeviceController extends Controller
 {
-   
+
     public function store(Request $request)
     {
+        return response()->json(['message' => $request->all()], 200);
         $validate  = Validator::make($request->all(), [
             'device' => ['required']
         ]);
@@ -22,17 +23,17 @@ class DeviceController extends Controller
         if ($getExist) {
             Device::where('user_id', Auth::id())->update([
                 'user_id' => Auth::id(),
-                'device' => $request->get('device'),
-                'device_type' => ($request->get('device_type'))? $request->get('device_type') : 'mobile'
+                'device' => $request->device,
+                'device_type' => ($request->device_type)? $request->device_type : 'mobile'
             ]);
         }else{
             Device::create([
                 'user_id' => Auth::id(),
-                'device' => $request->get('device'),
-                'device_type' => ($request->get('device_type'))? $request->get('device_type') : 'mobile'
+                'device' => $request->device,
+                'device_type' => ($request->device_type)? $request->device_type : 'mobile'
             ]);
         }
     }
 
-   
+
 }
