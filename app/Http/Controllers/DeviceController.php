@@ -11,7 +11,7 @@ class DeviceController extends Controller
 
     public function store(Request $request)
     {
-        return response()->json(['message' => $request->all()], 200);
+        // return response()->json(['message' => $request->all()], 200);
         $validate  = Validator::make($request->all(), [
             'device' => ['required']
         ]);
