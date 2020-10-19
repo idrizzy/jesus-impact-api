@@ -223,6 +223,9 @@ class FeedController extends Controller
                     }
                 }
             }
+            if ($request->feedPostType == 'shared') {
+                return response()->json(['status' => 'ok', 'message'=>'Feed Shared Successfully!'], 201);
+            }
             return response()->json(['status' => 'ok', 'message'=>'Feed Created Successfully!'], 201);
         }
     }
