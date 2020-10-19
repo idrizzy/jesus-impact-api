@@ -26,10 +26,11 @@ class FeedController extends Controller
         $ids = collect($newFriendArray)->keys()->all();
         $feeds = Feed::with('likes')
                      ->with('likers')
+                     ->with('feeds')
                      ->with(array('user'=> function($query){ $query->select('name','username','id','photo'); }))
                      ->with('files')
                      ->with(array('comments'=> function($query){ $query->with(array('replies'=> function($query){ $query->with('replies'); })); }))
-                     ->select('id','user_id','postType','content','created_at')
+                     ->select('id','user_id','postType','content','created_at','feed_id','feedPostType')
                      ->where('id',$id)
                      ->first();
         return response()->json(['data'=> $feeds], 200);
@@ -45,10 +46,11 @@ class FeedController extends Controller
         $ids = collect($newFriendArray)->keys()->all();
         $feeds = Feed::with('likes')
                      ->with('likers')
+                     ->with('feeds')
                      ->with(array('user'=> function($query){ $query->select('name','username','id','photo'); }))
                      ->with('files')
                      ->with(array('comments'=> function($query){ $query->with(array('replies'=> function($query){ $query->with('replies'); })); }))
-                     ->select('id','user_id','postType','content','created_at')
+                     ->select('id','user_id','postType','content','created_at','feed_id','feedPostType')
                      ->whereIn('user_id', $ids)
                      ->latest()->get();
         return response()->json(['data'=> $feeds], 200);
@@ -59,10 +61,11 @@ class FeedController extends Controller
         $user = User::find(Auth::id());
         $feeds = Feed::with('likes')
                      ->with('likers')
+                     ->with('feeds')
                      ->with(array('user'=> function($query){ $query->select('name','username','id','photo'); }))
                      ->with('files')
                      ->with(array('comments'=> function($query){ $query->with(array('replies'=> function($query){ $query->with('replies'); })); }))
-                     ->select('id','user_id','postType','content','created_at')
+                     ->select('id','user_id','postType','content','created_at','feed_id','feedPostType')
                      ->where('user_id', $user->id)
                      ->latest()->get();
         return response()->json(['data'=> $feeds], 200);
@@ -74,10 +77,11 @@ class FeedController extends Controller
         if ($user) {
             $feeds = Feed::with('likes')
                          ->with('likers')
+                         ->with('feeds')
                          ->with(array('user'=> function($query){ $query->select('name','username','id','photo'); }))
                          ->with('files')
                          ->with(array('comments'=> function($query){ $query->with(array('replies'=> function($query){ $query->with('replies'); })); }))
-                         ->select('id','user_id','postType','content','created_at')
+                         ->select('id','user_id','postType','content','created_at','feed_id','feedPostType')
                          ->where('user_id', $id)
                          ->latest()->get();
             $followers = ($user->followers) ? $user->followers : [];
@@ -140,6 +144,12 @@ class FeedController extends Controller
         if ($request->feedType != 'personal') {
             $data['community_id'] = $request->community_id;
         }
+
+        if ($request->feedPostType == 'shared') {
+            $data['feedPostType'] = 'shared';
+            $data['feed_id'] = $request->feed_id;
+        }
+
         $feed = new Feed($data);
         $save = $feed->save();
         if ($save) {

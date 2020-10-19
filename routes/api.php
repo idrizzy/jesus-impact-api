@@ -59,6 +59,7 @@ Route::group(['middleware' => ['auth']], function() {
     //User Feed
     Route::get('/delete/feed/{feedid}', 'FeedController@destroy');
     Route::post('/create/feed', 'FeedController@store');
+    Route::post('/share/feed', 'FeedController@store');
     Route::get('/user/feeds', 'FeedController@index');
     Route::get('/user/feed/{id}', 'FeedController@show');
     Route::get('/my/feeds', 'FeedController@myFeeds');
