@@ -10,8 +10,12 @@ use App\User;
 use App\Models\Feed;
 use Auth;
 use DB;
+use App\Http\Traits\NewNotificationTrait;
+use App\Models\Device;
 class CommunityController extends Controller
 {
+    use NewNotificationTrait;
+
     public function communityDetails($id)
     {
         $userid = Auth::id();
@@ -41,12 +45,13 @@ class CommunityController extends Controller
         $community = Community::where('id',$id)->first();
         if ($community->category == 'closed') {
             $joined = $community->users()->attach($userid, ['status'=>'pending']);
+            return response()->json([ "message" => 'Community Joined Successfully, Await Confirmation.' ], 200);
         }
         else{
 
             $joined = $community->users()->attach($userid);
+            return response()->json([ "message" => 'Community Joined Successfully' ], 200);
         }
-        return response()->json([ "message" => 'Community Joined Successfully' ], 200);
 
     }
 
@@ -97,9 +102,17 @@ class CommunityController extends Controller
     {
         $user = Auth::user();
         if($user->roles[0]->name == 'SuperAdmin'){
-
+            $getCommunity = Community::where('id', $request->community_id)->first();
             DB::table('community_user')->where('community_id', $request->community_id)->where('user_id',$request->user_id)->update(['status'=>'active']);
-            return response()->json([ "message" => "Approved Successfully" ], 200);
+            $userid = $request->user_id;
+            $receiver_id = $request->user_id;
+            $action_id = $request->community_id;
+            $content = 'You are now an active member of '.$getCommunity->name;
+            $type = 'join';
+            $notificationTime = date('h:i a');
+            $this->saveNotification($userid, $receiver_id, $action_id, $content, $notificationTime, $type);
+            $device = Device::where('user_id',$receiver_id)->first()->device;
+            return response()->json([ "message" => "Approved Successfully", 'device' => $device, 'content' => $content ], 200);
         }
         return response()->json(['message'=>'User Does not have permissions to perfrom this operation'], 401);
     }

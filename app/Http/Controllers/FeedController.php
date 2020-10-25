@@ -184,6 +184,37 @@ class FeedController extends Controller
                     }
                 }
             }
+            elseif ($request->postType == 'document') {
+                if ($request->hasFile('filename')){
+                    $picture = $request->file('filename');
+                    if (is_array($picture)) {
+                        $pictures = [];
+                        $image_urls = [];
+                        foreach ($picture as $p) {
+                            $pictures[] = $p;
+                            $upload = Cloudder::upload($p, null,array("public_id" => "feed/".uniqid()));
+
+                            if (!$upload) {
+                                return response()->json(['message'=>'Unable to upload file!!! Check  and try again'], 400);
+                            }
+                            $image_urls[] =Cloudder::secureShow(Cloudder::getResult()['secure_url']);
+                        }
+                        foreach ($image_urls as $image) {
+                            $picturesss = File::create(['filename' => $image]);
+                        }
+                        $picfirstid =  $picturesss->id;
+                        if (count($picture) > 1) {
+                            for ($i = 0; $i <= count($picture) - 1; $i++) {
+                                $numss[] = $picfirstid - (10 * $i);
+                            }
+                            $feed->files()->attach($numss);
+                        }
+                        else{
+                            $feed->files()->attach($picfirstid);
+                        }
+                    }
+                }
+            }
             elseif ($request->postType == 'video') {
                 if ($request->hasFile('filename')){
                     $video = $request->file('filename');
