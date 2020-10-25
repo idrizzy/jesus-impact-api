@@ -11,7 +11,7 @@ class Community extends Model
 
     public function users()
     {
-        return $this->belongsToMany('App\User', 'community_user', 'community_id', 'user_id');
+        return $this->belongsToMany('App\User', 'community_user', 'community_id', 'user_id')->withPivot('status');
     }
 
     public function feeds()
