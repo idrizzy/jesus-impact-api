@@ -192,7 +192,7 @@ class FeedController extends Controller
                         $image_urls = [];
                         foreach ($picture as $p) {
                             $pictures[] = $p;
-                            $upload = Cloudder::upload($p, null,array("public_id" => "feed/".uniqid()));
+                            $upload = Cloudder::upload($p, null,array("public_id" => "feed/".uniqid(), "resource_type" => "raw"));
 
                             if (!$upload) {
                                 return response()->json(['message'=>'Unable to upload file!!! Check  and try again'], 400);
