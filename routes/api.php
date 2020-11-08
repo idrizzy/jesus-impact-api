@@ -21,6 +21,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::post('register', 'UserController@register');
 Route::get('test', 'UserController@test');
 Route::post('login', 'UserController@authenticate');
+Route::post('social/register', 'UserController@socialRegister');
 Route::get('open', 'DataController@open');
 Route::get('viewpermissions', 'RolePermissionController@permissions');
 Route::get('viewroles', 'RolePermissionController@role');

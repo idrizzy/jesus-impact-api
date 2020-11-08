@@ -25,6 +25,41 @@ class UserController extends Controller
 
         return response()->json(['message' => 'Successfully logged out']);
     }
+    public function socialRegister(Request $request)
+    {
+        $exist = User::where('email', $request->email)->first();
+        if ($exist) {
+            $token = auth()->login($exist);
+            return response()->json(['data'=> $token], 200);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+        ]);
+
+        if($validator->fails()){
+                return response()->json($validator->errors()->first(), 400);
+        }
+
+        $user = User::create([
+            'name' => $request->get('name'),
+            'email' => $request->get('email'),
+            'password' => Hash::make($request->get('email')),
+            'username'=>$request->get('name').rand(1,100),
+            'photo'=>$request->get('photo')
+        ]);
+        Device::create([
+            'user_id' => $user->id,
+            'device' => $request->get('device'),
+            'device_type' => ($request->get('device_type'))? $request->get('device_type') : 'mobile'
+        ]);
+        $user->assignRole('Users');
+
+        $token = auth()->login($user);
+        return response()->json(['data'=> $token], 200);
+    }
+    
     public function authenticate(Request $request)
     {
         $credentials = $request->only('email', 'password');
@@ -65,7 +100,7 @@ class UserController extends Controller
             'device_type' => ($request->get('device_type'))? $request->get('device_type') : 'mobile'
         ]);
         $user->assignRole('Users');
-        
+
         return response()->json(["message"=>"Account Created Successfully"],201);
     }
 
