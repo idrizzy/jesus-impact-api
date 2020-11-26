@@ -3,8 +3,10 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\DB;
-class AlterFeedsTableAddDocumentToEnumPostType extends Migration
+use App\User;
+use Illuminate\Support\Facades\Hash;
+
+class UpdateSuperAdminPassword extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +15,8 @@ class AlterFeedsTableAddDocumentToEnumPostType extends Migration
      */
     public function up()
     {
-        Schema::table('feeds', function (Blueprint $table) {
-            DB::statement("ALTER TABLE feeds CHANGE COLUMN postType postType ENUM('text', 'audio','video', 'image','document') NOT NULL DEFAULT 'text'");
+        Schema::table('users', function (Blueprint $table) {
+            User::where('email','jesusimpact2013@gmail.com')->update(['password'=>Hash::make('BomaMember-new21')]);
         });
     }
 
@@ -25,7 +27,7 @@ class AlterFeedsTableAddDocumentToEnumPostType extends Migration
      */
     public function down()
     {
-        Schema::table('feeds', function (Blueprint $table) {
+        Schema::table('users', function (Blueprint $table) {
             //
         });
     }
