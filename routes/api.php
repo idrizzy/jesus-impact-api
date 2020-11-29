@@ -114,7 +114,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/blogPost/{id}', 'BlogPostController@show');
     Route::post('/blogpost', 'BlogPostController@create');
     Route::post('/blogPost/{id}/update', 'BlogPostController@update');
-    Route::post('/blogPost/{id}/delete', 'BlogPostController@destroy');
+    Route::get('/blogPost/{id}/delete', 'BlogPostController@destroy');
 
     // Community
     Route::post('/community/add', 'CommunityController@store');
