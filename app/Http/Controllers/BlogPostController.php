@@ -53,6 +53,7 @@ class blogPostController extends Controller
             'post_title'=>$request->post_title,
             'post_description' => $request->post_description,
             'category_id' => $request->category_id,
+            'youtube' => $request->youtube,
             'post_image' => $image_url,
         ]);
 
@@ -126,6 +127,7 @@ class blogPostController extends Controller
        $Blog_post->update([
             'post_title'=>$request->post_title,
             'post_description' => $request->post_description,
+            'youtube' => $request->youtube,
             'category_id' => $request->category_id,
             'post_image' => $image_url,
         ]);
