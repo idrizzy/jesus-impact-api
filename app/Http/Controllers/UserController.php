@@ -150,7 +150,9 @@ class UserController extends Controller
         $image_name = $request->file('photo')->getRealPath();
 
         Cloudder::upload($image_name, null, array("public_id"=>"users/".uniqid(),
-                        "width"=>600, "height"=>600, "crop"=>'imagga_scale', "sign_url" => true, "fetch_format"=>'auto', "quality"=>"auto"));
+                        "width"=>600, "height"=>600,  "sign_url" => true, "fetch_format"=>'auto', "quality"=>"auto"));
+        // Cloudder::upload($image_name, null, array("public_id"=>"users/".uniqid(),
+        //                 "width"=>600, "height"=>600, "crop"=>'imagga_scale', "sign_url" => true, "fetch_format"=>'auto', "quality"=>"auto"));
 
         $image_url= Cloudder::secureShow(Cloudder::getResult()["secure_url"]);
         User::where('id', Auth::user()->id)->update(['photo'=>$image_url]);
