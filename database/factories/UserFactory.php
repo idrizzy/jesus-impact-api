@@ -26,3 +26,23 @@ $factory->define(User::class, function (Faker $faker) {
         'remember_token' => Str::random(10),
     ];
 });
+
+$factory->define(App\Models\Message::class, function (Faker $faker) {
+    $min = 1;
+    $max = 61;
+    
+    $result = mt_rand(ceil($min/10) , floor($max/10))*10 + 1;
+    $result1 = mt_rand(ceil($min/10) , floor($max/10))*10 + 1;
+    
+     do {
+            $from = $result;
+            $to = $result1;
+        } while ($from === $to);
+
+    return [
+        'from' => $from,
+        'to' => $to,
+        'text' => $faker->sentence
+    ];
+});
+

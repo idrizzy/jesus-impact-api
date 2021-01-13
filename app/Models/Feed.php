@@ -3,11 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
+use Overtrue\LaravelLike\Traits\Likeable;
 class Feed extends Model
 {
-    //
-    protected $fillable = ['user_id','content','postType','status'];
+    use Likeable;
+    protected $fillable = ['user_id','content','postType','status','feedType','community_id','feedPostType','feed_id','youtube'];
 
     public function user()
     {
@@ -20,6 +20,12 @@ class Feed extends Model
 
     public function comments()
     {
-        return $this->morphMany('App\Models\Comment', 'commentable')->whereNull('parent_id');
+        return $this->morphMany('App\Models\Comment', 'commentable')->whereNull('parent_id')->with('user');
     }
+
+    public function feeds()
+    {
+        return $this->belongsTo('App\Models\Feed', 'feed_id', 'id')->with('user');
+    }
+
 }

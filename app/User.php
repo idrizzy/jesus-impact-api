@@ -7,10 +7,12 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Spatie\Permission\Traits\HasRoles;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Overtrue\LaravelFollow\Followable;
+use Overtrue\LaravelLike\Traits\Liker;
+
 class User extends Authenticatable implements JWTSubject
 {
         use Notifiable, HasRoles;
-        use Followable;
+        use Followable, Liker;
         protected $guard_name = 'api';
     /**
      * The attributes that are mass assignable.
@@ -24,6 +26,12 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany('App\Models\Feed');
     }
+
+    public function communities()
+    {
+        return $this->belongsToMany('App\Models\Community', 'community_user', 'user_id', 'community_id')->withPivot('status');
+    }
+
     /**
      * The attributes that should be hidden for arrays.
      *
